@@ -4,8 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
-
+use App\Services\CloudinaryService;
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
@@ -15,6 +14,11 @@ Route::get('/', function () {
     ]);
 });
 
+
+Route::get('/test-upload', function (CloudinaryService $cloudinary) {
+    $path = public_path('images/logo.png');
+    return $cloudinary->uploadImage($path, 'catalog-cove/products');
+});
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
