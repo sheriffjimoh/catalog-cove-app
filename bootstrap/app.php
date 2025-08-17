@@ -18,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'business.exists' => \App\Http\Middleware\EnsureBusinessExists::class,
+            'no.business' => \App\Http\Middleware\RedirectIfBusinessExists::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

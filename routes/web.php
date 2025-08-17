@@ -5,9 +5,16 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\BusinessController;
+use Illuminate\Support\Facades\Auth;
+
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
+  // render Login as default page
+
+    if (Auth::check()) {
+        return redirect()->route('dashboard');
+    }
+    return Inertia::render('Auth/Login', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
@@ -24,8 +31,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Business setup routes (no business.exists check here)
-    Route::get('/business/create', [BusinessController::class, 'create'])->name('business.create');
-    Route::post('/business', [BusinessController::class, 'store'])->name('business.store');
+    Route::middleware(['auth', 'no.business'])->group(function () {
+        Route::get('/business/create', [BusinessController::class, 'create'])->name('business.create');
+        Route::post('/business', [BusinessController::class, 'store'])->name('business.store');
+    });
 
     // Routes that require business to exist
     Route::middleware('business.exists')->group(function () {
