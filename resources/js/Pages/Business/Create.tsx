@@ -60,7 +60,7 @@ export default function CreateBusiness(): JSX.Element {
           </div>
 
           {/* Form Content */}
-          <div className="px-8 py-8">
+          <form className="px-8 py-8" onSubmit={submit}  >
             <div className="space-y-6">
               <FormInput
                 label="Business Name"
@@ -129,7 +129,7 @@ export default function CreateBusiness(): JSX.Element {
                 </Button>
               </div>
             </div>
-          </div>
+          </form>
         </div>
       </main>
     </div>

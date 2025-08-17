@@ -55,7 +55,7 @@ const FormInput: React.FC<FormInputProps> = ({
         )}
         <TextInput
           {...inputProps}
-          className={`${hasIcon ? 'pl-10' : 'pl-4'} ${error ? 'border-red-300 focus:ring-red-500' : ''} ${className}`}
+          className={`${hasIcon ? 'pl-[2rem]' : 'pl-4'} ${error ? 'border-red-300 focus:ring-red-500' : ''} ${className}`}
         />
       </div>
       {error && (
