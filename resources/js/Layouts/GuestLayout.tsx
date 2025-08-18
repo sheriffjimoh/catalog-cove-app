@@ -1,7 +1,7 @@
 import { PropsWithChildren } from "react";
 
 interface GuestProps extends PropsWithChildren {
-  name: 'login' | 'register' | 'create-business';
+  name: 'login' | 'register' | 'create-business' | '';
 }
 
 const getHeaderContent = (name: string) => {
@@ -23,8 +23,8 @@ const getHeaderContent = (name: string) => {
       };
     default:
       return {
-        title: 'Welcome',
-        subtitle: 'Get started with your account'
+        title: '',
+        subtitle: ''
       };
   }
 };

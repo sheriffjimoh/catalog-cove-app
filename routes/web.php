@@ -9,8 +9,6 @@ use Illuminate\Support\Facades\Auth;
 
 
 Route::get('/', function () {
-  // render Login as default page
-
     if (Auth::check()) {
         return redirect()->route('dashboard');
     }
