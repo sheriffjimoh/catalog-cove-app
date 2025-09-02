@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormTextareaProps } from '@/types/input.type';
+import { FormTextareaProps } from '@/Types/input.type';
 
 
 export const FormTextarea: React.FC<FormTextareaProps> = ({ 

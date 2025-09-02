@@ -1,4 +1,4 @@
-import { ButtonProps } from '@/types/input.type'
+import { ButtonProps } from '@/Types/input.type'
 
 export // Reusable Button Component
 const Button: React.FC<ButtonProps> = ({ 

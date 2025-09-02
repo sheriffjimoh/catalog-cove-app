@@ -1,6 +1,6 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 
-import { TextInputProps, FormInputProps } from '@/types/input.type';
+import { TextInputProps, FormInputProps } from '@/Types/input.type';
 
 
 const TextInput = forwardRef<HTMLInputElement, TextInputProps>(function TextInput(

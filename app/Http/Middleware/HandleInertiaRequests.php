@@ -34,6 +34,7 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
+            'business' => $request->user() ? $request->user()->business : null,
         ];
     }
 }
