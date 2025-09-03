@@ -33,11 +33,11 @@ export default function Guest({ children, name }: GuestProps) {
   const { title, subtitle } = getHeaderContent(name);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50">
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
       <main className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
+        <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-900 overflow-hidden">
           {/* Form Header */}
-          <div className="border-b px-8 py-4">
+          <div className="border-b dark:border-gray-900 px-8 py-4">
             <div className="w-full items-center justify-center flex mb-4">
               <img
                 src="/images/logo.svg"
@@ -49,7 +49,7 @@ export default function Guest({ children, name }: GuestProps) {
               <h2 className="text-2xl font-bold text-purple-700 mb-2">
                 {title}
               </h2>
-              <p className="text-black">
+              <p className="text-black dark:text-white">
                 {subtitle}
               </p>
             </div>

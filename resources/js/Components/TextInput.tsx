@@ -22,7 +22,7 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(function TextInpu
       {...props}
       type={type}
       className={
-        'w-full pl-4 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-gray-50 hover:bg-white focus:bg-white text-gray-900 placeholder-gray-400 ' +
+        'w-full pl-4 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 dark:bg-gray-800 bg-gray-100  hover:bg-white focus:bg-white text-gray-900 dark:text-white placeholder-gray-400 ' +
         className
       }
       ref={localRef}
@@ -44,7 +44,7 @@ const FormInput: React.FC<FormInputProps> = ({
   
   return (
     <div className="space-y-2">
-      <label className="block text-sm font-semibold text-gray-800">
+      <label className="block text-sm font-semibold text-gray-800 dark:text-white">
         {label} {!required && <span className="text-gray-400 font-normal">(optional)</span>}
       </label>
       <div className="relative">
