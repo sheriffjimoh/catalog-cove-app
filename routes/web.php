@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\BusinessController;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\ProductController;
 
 
 Route::get('/', function () {
@@ -39,6 +40,13 @@ Route::middleware('auth')->group(function () {
         Route::get('/dashboard', function () {
             return Inertia::render('Dashboard');
         })->middleware(['verified'])->name('dashboard');
+
+        // Product routes
+        Route::group(['prefix' => 'products', 'as' => 'products.'], function () {
+            Route::get('/', [ProductController::class, 'index'])->name('index');
+            Route::get('/create', [ProductController::class, 'create'])->name('create');
+            Route::post('/', [ProductController::class, 'store'])->name('store');
+        });
     });
 });
 
