@@ -13,10 +13,6 @@ class EnsureBusinessExists
     public function handle(Request $request, Closure $next): Response
     {
 
-        Log::info('EnsureBusinessExists middleware triggered', [
-            'user_id' => $request->user()->id,
-            'business' => $request->user()->business ,
-        ]);
 
         if (!$request->user()->business) {
             return redirect()->route('business.create');

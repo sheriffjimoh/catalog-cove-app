@@ -4,6 +4,7 @@ import { useTheme } from '@/Contexts/ThemeContext';
 
 interface ThemeToggleProps {
   inDropdown?: boolean;
+  closeDropdown?: () => void;
 }
 
 export const ThemeToggle: React.FC<ThemeToggleProps> = ({ inDropdown = false }) => {

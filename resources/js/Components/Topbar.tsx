@@ -73,13 +73,14 @@ const Topbar: React.FC<TopbarProps> = ({
                 <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-900 rounded-lg shadow-lg border border-gray-200 py-2 z-50">
                   <Link
                     href="/profile"
+                    onClick={() => setUserDropdownOpen(false)}
                     className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                   >
                     <User className="h-4 w-4 mr-3" />
                     Profile
                   </Link>
 
-                  <ThemeToggle inDropdown={true} />
+                  <ThemeToggle inDropdown={true} closeDropdown={() =>console.log("Let'g GOOOOOoo")} />
       
                   <button
                     onClick={handleLogout}
