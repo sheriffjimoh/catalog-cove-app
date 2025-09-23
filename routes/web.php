@@ -7,6 +7,7 @@ use Inertia\Inertia;
 use App\Http\Controllers\BusinessController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\AISuggestionController;
 
 
 Route::get('/', function () {
@@ -37,6 +38,7 @@ Route::middleware('auth')->group(function () {
 
     // Routes that require business to exist
     Route::middleware('business.exists')->group(function () {
+     
         Route::get('/dashboard', function () {
             return Inertia::render('Dashboard');
         })->middleware(['verified'])->name('dashboard');
@@ -49,6 +51,11 @@ Route::middleware('auth')->group(function () {
             Route::delete('/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
 
         });
+        
+
+    Route::post('/ai/suggestion', [AISuggestionController::class, 'suggest'])
+    ->name('ai.suggestion');
+
     });
 });
 

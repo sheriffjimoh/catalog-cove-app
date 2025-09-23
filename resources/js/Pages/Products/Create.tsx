@@ -66,43 +66,62 @@ export default function ModernCreate() {
     setDragActive(false);
   };
 
-  const handleAISuggestion = async (type: AIActionType, imageId: number | null = null): Promise<void> => {
-    if (type === 'title') {
-      setAiLoading(prev => ({ ...prev, title: true }));
-      
-      // Simulate AI API call
-      setTimeout(() => {
-        const suggestions: string[] = [
-          "Premium Wireless Bluetooth Headphones",
-          "Professional Studio Quality Microphone",
-          "Ultra-Slim Laptop Stand Adjustable",
-          "Smart Fitness Tracker with Heart Monitor",
-          "Ergonomic Gaming Chair with RGB Lighting",
-          "Portable Solar Power Bank Charger"
-        ];
-        const randomSuggestion: string = suggestions[Math.floor(Math.random() * suggestions.length)];
-        setData("name", randomSuggestion);
-        setAiLoading(prev => ({ ...prev, title: false }));
-      }, 1500);
-      
-    } else if (type === 'description') {
-      setAiLoading(prev => ({ ...prev, description: true }));
-      
-      setTimeout(() => {
-        const description: string = "Experience premium quality with this carefully crafted product designed to exceed your expectations. Featuring innovative technology and superior materials, this item offers exceptional value and lasting durability. Perfect for both personal use and professional applications, it combines style with functionality.";
-        setData("description", description);
-        setAiLoading(prev => ({ ...prev, description: false }));
-      }, 2000);
-      
-    } else if (type === 'background' && imageId !== null) {
-      setAiLoading(prev => ({ ...prev, background: imageId }));
-      
-      setTimeout(() => {
-        setAiLoading(prev => ({ ...prev, background: null }));
-        // In real implementation, replace the image with background removed version
-      }, 2500);
+  const handleAISuggestion = async (
+    type: AIActionType,
+    imageId: number | null = null
+  ): Promise<void> => {
+    try {
+      // Mark correct loading state
+      setAiLoading(prev => ({ ...prev, [type]: type === "background" ? imageId ?? true : true }));
+  
+      // Pick the image (for now always first if not specified)
+      const selectedImage = imageId
+        ? images.find(img => img.id === imageId)
+        : images[0];
+  
+      if (!selectedImage) {
+        throw new Error("No image found for AI suggestion");
+      }
+  
+      // Build request
+      const formData = new FormData();
+      formData.append("type", type);
+      formData.append("image", selectedImage.file);
+      formData.append("_token", (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content || "");
+  
+      const res = await fetch(route('ai.suggestion'), {
+        method: "POST",
+        body: formData,
+      });
+  
+      if (!res.ok) {
+        throw new Error(`Failed to generate AI ${type} suggestion`);
+      }
+  
+      const data = await res.json();
+  
+      if (!data.success) {
+        throw new Error(data.error || `AI ${type} suggestion failed`);
+      }
+  
+      // Apply suggestion
+      if (type === "title") {
+        setData("name", data.suggestion);
+      } else if (type === "description") {
+        setData("description", data.suggestion);
+      } else if (type === "background") {
+        // Replace image with background-removed version
+        // updateImage(imageId!, { url: data.image_url });
+      }
+    } catch (err: any) {
+      console.error(err);
+      alert(err.message || "AI request failed");
+    } finally {
+      // Reset loading
+      setAiLoading(prev => ({ ...prev, [type]: type === "background" ? null : false }));
     }
   };
+  
 
   const handleInputChange = (field: keyof FormData) => {
     return (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
@@ -350,8 +369,8 @@ export default function ModernCreate() {
                       <textarea
                         value={data.description}
                         onChange={handleInputChange('description')}
-                        rows={5}
-                        className="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent dark:bg-slate-700 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 transition-colors resize-none"
+                        rows={7}
+                        className="w-full px-4 py-3 border resize-y  border-slate-300 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent dark:bg-slate-700 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 transition-colors"
                         placeholder="Describe what makes your product special..."
                         required
                         maxLength={MAX_DESCRIPTION_LENGTH}

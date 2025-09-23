@@ -44,7 +44,7 @@ export default function DataTable<T extends { id: number }>({
           <tbody>
             {data.length > 0 ? (
               data.map((row) => (
-                <tr key={row.id} className="border-t border-b-gray-100 bg-slate-50 dark:bg-gray-800  hover:bg-gray-100 dark:hover:bg-gray-700">
+                <tr key={row.id} className="border-t border-b-gray-100 bg-slate-50 dark:bg-gray-900  hover:bg-gray-100 dark:hover:bg-gray-700">
                   {columns.map((col) => (
                     <td key={col.key.toString()} className={`p-3 ${col.className}`}>
                       {col.render ? col.render(row) : (row[col.key as keyof T] as any)}
@@ -74,7 +74,7 @@ export default function DataTable<T extends { id: number }>({
               key={i}
               href={link.url}
               className={`px-3 py-1 border rounded ${
-                link.active ? "bg-indigo-600 text-white" : "bg-white"
+                link.active ? "bg-purple-700 text-white" : "bg-white"
               }`}
               dangerouslySetInnerHTML={{ __html: link.label }}
             />

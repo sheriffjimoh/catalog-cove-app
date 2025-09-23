@@ -15,6 +15,7 @@ export interface FormData {
 }
 
 export interface FormErrors {
+  error: any;
   name?: string;
   description?: string;
   price?: string;

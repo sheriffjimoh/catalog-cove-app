@@ -1,4 +1,6 @@
 export interface User {
+    logo: unknown;
+    role: "business" | "admin";
     id: number;
     name: string;
     email: string;

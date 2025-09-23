@@ -43,7 +43,7 @@ export default function Index({ products, filters }: Props) {
         <h1 className="text-2xl font-bold dark:text-white  text-black">Products</h1>
         <Link
           href="/products/create"
-          className="px-4 py-2 bg-indigo-600 text-white rounded"
+          className="px-4 py-2 bg-purple-700 text-white rounded-lg"
         >
           + Add Product
         </Link>
@@ -79,7 +79,7 @@ export default function Index({ products, filters }: Props) {
               <div className="space-x-2 text-right">
                 <Link
                   href={`/products/create?id=${row.id}`}
-                  className="text-blue-600 hover:underline"
+                  className="text-purple-700 hover:underline"
                 >
                   Edit
                 </Link>
