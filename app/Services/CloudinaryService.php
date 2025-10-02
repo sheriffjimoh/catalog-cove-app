@@ -23,4 +23,19 @@ class CloudinaryService
 
         return $result['secure_url'] ?? null;
     }
+    
+    public function removeBackground($filePath, $folder = null)
+    {
+        $options = [
+            "background_removal" => "cloudinary_ai", 
+        ];
+
+        if ($folder) {
+            $options['folder'] = $folder;
+        }
+
+        $result = (new UploadApi())->upload($filePath, $options);
+
+        return $result['secure_url'] ?? null;
+    }
 }

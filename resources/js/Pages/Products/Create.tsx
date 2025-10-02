@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "@inertiajs/react";
 import { Camera, X, Sparkles, Image, Plus, ArrowLeft, Save, Zap, Upload, Eye } from "lucide-react";
 import type {  ImageUpload, FormData, AILoadingState, AIActionType, ModernCreateProps } from "@/Types/create-product.type";
@@ -22,6 +22,7 @@ export default function ModernCreate() {
     description: false,
     background: null
   });
+  const [imageVersion, setImageVersion] = useState(0);
 
   const MAX_IMAGES = 6;
   const MAX_DESCRIPTION_LENGTH = 500;
@@ -32,21 +33,22 @@ export default function ModernCreate() {
     const newImages: ImageUpload[] = Array.from(files)
       .slice(0, MAX_IMAGES - images.length)
       .map((file: File) => ({
-        id: Date.now() + Math.random(),
+        id:`${Date.now()}-${Math.random()}`,
         file,
         preview: URL.createObjectURL(file),
-        name: file.name
+        name: file.name, 
+        lastUpdated: new Date(),
       }));
     
     const updatedImages: ImageUpload[] = [...images, ...newImages];
     setImages(updatedImages);
-    setData("images", updatedImages.map((img: ImageUpload) => img.file));
+    setData("images", updatedImages.map((img: ImageUpload) => img.file).filter((file): file is File => file !== null));
   };
 
-  const removeImage = (id: number): void => {
-    const updatedImages: ImageUpload[] = images.filter((img: ImageUpload) => img.id !== id);
+  const removeImage = (id: string): void => {
+    const updatedImages: ImageUpload[] = images.filter((img: ImageUpload) => img.id !== id.toString());
     setImages(updatedImages);
-    setData("images", updatedImages.map((img: ImageUpload) => img.file));
+    setData("images", updatedImages.map((img: ImageUpload) => img.file).filter((file): file is File => file !== null));
   };
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>): void => {
@@ -66,17 +68,26 @@ export default function ModernCreate() {
     setDragActive(false);
   };
 
+ 
+  useEffect(() => {
+    console.log("Images updated in UI:", images);
+  }, [images]);
+
+
   const handleAISuggestion = async (
     type: AIActionType,
-    imageId: number | null = null
+    imageId: string | null = null
   ): Promise<void> => {
     try {
       // Mark correct loading state
-      setAiLoading(prev => ({ ...prev, [type]: type === "background" ? imageId ?? true : true }));
-  
+      setAiLoading((prev) => ({
+        ...prev,
+        [type]: type === "background" ? imageId ?? true : true,
+      }));
+
       // Pick the image (for now always first if not specified)
       const selectedImage = imageId
-        ? images.find(img => img.id === imageId)
+        ? images.find((img) => img.id === imageId.toString())
         : images[0];
   
       if (!selectedImage) {
@@ -86,10 +97,21 @@ export default function ModernCreate() {
       // Build request
       const formData = new FormData();
       formData.append("type", type);
-      formData.append("image", selectedImage.file);
-      formData.append("_token", (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content || "");
+
+      if(selectedImage.file === null) {
+        formData.append("image", selectedImage.preview);
+        }else{
+        formData.append("image", selectedImage.file);
+      }
+
+      formData.append(
+        "_token",
+        (
+          document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement
+        )?.content || ""
+      );
   
-      const res = await fetch(route('ai.suggestion'), {
+      const res = await fetch(route("ai.suggestion"), {
         method: "POST",
         body: formData,
       });
@@ -104,23 +126,67 @@ export default function ModernCreate() {
         throw new Error(data.error || `AI ${type} suggestion failed`);
       }
   
-      // Apply suggestion
+      // Apply suggestion or replace image
       if (type === "title") {
         setData("name", data.suggestion);
       } else if (type === "description") {
         setData("description", data.suggestion);
       } else if (type === "background") {
-        // Replace image with background-removed version
-        // updateImage(imageId!, { url: data.image_url });
+        // Replace the image URL in the images state
+       
+        // setImages((prev) => {
+        //   const updated = prev.map((img) => {
+        //     const matches = String(img.id) === String(imageId);
+        //     console.log(`Comparing ${img.id} === ${imageId}: ${matches}`);
+            
+        //     return matches
+        //       ? {
+        //           ...img,
+        //           preview: `${data.processed_url}?cache=${Date.now()}`,
+        //           file: null,
+        //           lastUpdated: new Date(),
+        //         }
+        //       : img;
+        //   });
+           
+        //   return updated;
+        // });
+
+        const updatedImages = images.map((img) =>
+          String(img.id) === String(imageId)
+            ? {
+                ...img,
+                preview: `${data.processed_url}?t=${Date.now()}`,
+                file: null,
+                lastUpdated: new Date(),
+              }
+            : img
+        );
+        
+        // setIsRefreshing(true);
+        setImages([]);
+        
+        setTimeout(() => {
+          setImages(updatedImages);
+          setData('images', updatedImages.map((img) => img.file).filter((file): file is File => file !== null));
+          // setIsRefreshing(false);
+        }, 50);
+
+        // console.log("Looking for imageId:", imageId, "type:", typeof imageId);
+        // console.log("Updated Images after background removal:", images);
       }
     } catch (err: any) {
       console.error(err);
       alert(err.message || "AI request failed");
     } finally {
       // Reset loading
-      setAiLoading(prev => ({ ...prev, [type]: type === "background" ? null : false }));
+      setAiLoading((prev) => ({
+        ...prev,
+        [type]: type === "background" ? null : false,
+      }));
     }
   };
+  
   
 
   const handleInputChange = (field: keyof FormData) => {
@@ -243,15 +309,16 @@ export default function ModernCreate() {
                 {images.length > 0 && (
                   <div className="mt-6 space-y-4">
                     <h4 className="text-sm font-medium text-slate-700 dark:text-slate-300">Uploaded Images</h4>
-                    <div className="grid grid-cols-2 gap-3">
+                    <div  className="grid grid-cols-2 gap-3">
                       {images.map((image: ImageUpload, index: number) => (
-                        <div key={image.id} className="relative group bg-slate-50 dark:bg-slate-700 rounded-lg overflow-hidden">
+                        <div  key={`${image.id}-${image.lastUpdated?.getTime() || 0}`}  className="relative group bg-slate-50 dark:bg-slate-700 rounded-lg overflow-hidden">
                           <img
-                            src={image.preview}
+                          src={`${image.preview}`}
                             alt={`Product ${index + 1}`}
                             className="w-full h-24 sm:h-32 object-cover"
+                            loading="eager"
+                            crossOrigin="anonymous"
                           />
-                          
                           {/* Image Overlay */}
                           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors">
                             <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">

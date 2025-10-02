@@ -21,7 +21,7 @@ class AISuggestionController extends Controller
         try {
             $request->validate([
                 'image' => 'required|image|max:5120', // max 5MB
-                'type' => 'required|in:title,description',
+                'type' => 'required|in:title,description,background',
             ]);
 
             // 1. Upload image temporarily to Cloudinary (ai_images folder)
@@ -32,6 +32,20 @@ class AISuggestionController extends Controller
                 throw new Exception("Image upload failed");
             }
             $type = $request->input('type'); // default to description
+
+            if ($type === 'background') {
+                $processedUrl = $this->cloudinary->removeBackground($filePath, 'ai_images');
+
+                if (!$processedUrl) {
+                    throw new Exception("Background removal failed");
+                }
+
+                return response()->json([
+                    'success' => true,
+                    'type' => $type,
+                    'processed_url' => $processedUrl,
+                ]);
+            }
 
             // 2. Build prompt depending on type
             $prompt = match ($type) {

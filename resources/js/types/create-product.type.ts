@@ -1,9 +1,10 @@
 // Type definitions
 export interface ImageUpload {
-  id: number;
-  file: File;
+  id: string;
+  file: File | null;
   preview: string;
   name: string;
+  lastUpdated: Date;
 }
 
 export interface FormData {
@@ -26,7 +27,7 @@ export interface FormErrors {
 export interface AILoadingState {
   title: boolean;
   description: boolean;
-  background: number | null;
+  background: string | null;
 }
 
 export type AIActionType = 'title' | 'description' | 'background';
