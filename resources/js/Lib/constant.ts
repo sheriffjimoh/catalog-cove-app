@@ -1,5 +1,5 @@
 
-import { Home, Package, BarChart3, Users, Settings } from 'lucide-react';
+import { Home, Package, BarChart3, Users, Settings, Image } from 'lucide-react';
 import type { NavigationItem } from '@/Types/nav.type';
 
 export const navigationItems: NavigationItem[] = [
@@ -13,6 +13,12 @@ export const navigationItems: NavigationItem[] = [
       name: 'Products',
       icon: Package,
       href: '/products',
+      roles: ['business', 'admin']
+    },
+    {
+      name: 'Media Library',
+      icon: Image,
+      href: '/media-library',
       roles: ['business', 'admin']
     },
     {

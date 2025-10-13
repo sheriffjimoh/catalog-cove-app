@@ -8,6 +8,7 @@ use App\Http\Controllers\BusinessController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\AISuggestionController;
+use App\Http\Controllers\MediaLibraryController;
 
 
 Route::get('/', function () {
@@ -48,9 +49,12 @@ Route::middleware('auth')->group(function () {
             Route::get('/', [ProductController::class, 'index'])->name('index');
             Route::get('/create', [ProductController::class, 'create'])->name('create');
             Route::post('/', [ProductController::class, 'store'])->name('store');
+            Route::get('/{product}/edit', [ProductController::class, 'edit'])->name('edit');
+            Route::put('/{product}', [ProductController::class, 'update'])->name('update');
             Route::delete('/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
-
         });
+
+        Route::get('/media-library',[MediaLibraryController::class, 'index'])->name('media.library');
         
 
     Route::post('/ai/suggestion', [AISuggestionController::class, 'suggest'])

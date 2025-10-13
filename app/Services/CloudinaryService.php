@@ -4,6 +4,7 @@ namespace App\Services;
 
 use Cloudinary\Configuration\Configuration;
 use Cloudinary\Api\Upload\UploadApi;
+use Illuminate\Support\Facades\Log;
 
 class CloudinaryService
 {
@@ -35,6 +36,8 @@ class CloudinaryService
         }
 
         $result = (new UploadApi())->upload($filePath, $options);
+
+        Log::info('Background removal result: ' . json_encode($result));
 
         return $result['secure_url'] ?? null;
     }

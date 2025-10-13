@@ -78,7 +78,7 @@ export default function Index({ products, filters }: Props) {
             render: (row) => (
               <div className="space-x-2 text-right">
                 <Link
-                  href={`/products/create?id=${row.id}`}
+                  href={`products/${row.id}/edit`}
                   className="text-purple-700 hover:underline"
                 >
                   Edit

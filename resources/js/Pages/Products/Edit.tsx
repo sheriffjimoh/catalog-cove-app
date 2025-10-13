@@ -11,6 +11,7 @@ import {
     Zap,
     Upload,
     Eye,
+    Pen,
 } from "lucide-react";
 import type {
     ImageUpload,
@@ -21,16 +22,27 @@ import type {
 import Authenticated from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 
-export default function ModernCreate() {
+export default function EditPage({ product }: { product: any }) {
+    // Initialize form with existing product data
+    const initialImages: ImageUpload[] = (product.images || []).map(
+        (img: any, index: number) => ({
+            id: `${Date.now()}-${index}`,
+            file: null, // No local file, using URL
+            preview: img.url, // Assuming img has a 'url' property
+            name: img.name || `Image ${index + 1}`,
+            lastUpdated: new Date(),
+        })
+    );
+    console.log("Initial Images:", initialImages);
     const { data, setData, post, processing, errors } = useForm({
-        name: "",
-        description: "",
-        price: "",
-        stock: 0,
+        name: product.name || "",
+        description: product.description || "",
+        price: product.price || "",
+        stock: product.stock || 0,
         images: [] as File[], // Explicitly define the type of images as File[]
     });
 
-    const [images, setImages] = useState<ImageUpload[]>([]);
+    const [images, setImages] = useState<ImageUpload[]>(initialImages);
     const [dragActive, setDragActive] = useState<boolean>(false);
     const [aiLoading, setAiLoading] = useState<AILoadingState>({
         title: false,
@@ -231,14 +243,14 @@ export default function ModernCreate() {
                         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                             <div className="flex items-center gap-4">
                                 <div className="p-3 bg-purple-700 rounded-xl shadow-lg">
-                                    <Plus className="text-white" size={28} />
+                                    <Pen className="text-white" size={28} />
                                 </div>
                                 <div>
                                     <h1 className="text-3xl font-bold text-slate-900 dark:text-white">
-                                        Create Product
+                                        Edit Product
                                     </h1>
                                     <p className="text-slate-600 dark:text-slate-400 mt-1">
-                                        Add your product and let AI optimize the
+                                        Edit your product and let AI optimize the
                                         details
                                     </p>
                                 </div>

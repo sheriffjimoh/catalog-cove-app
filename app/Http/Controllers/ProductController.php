@@ -89,4 +89,15 @@ class ProductController extends Controller
 
         return redirect()->route('products.index')->with('success', 'Product deleted.');
     }
+
+    public function edit(Product $product, Request $request)
+    {
+        if ($product->business_id !== $request->user()->business->id) {
+            abort(403);
+        }
+
+        return Inertia::render('Products/Edit', [
+            'product' => $product->load('images'),
+        ]);
+    }
 }
