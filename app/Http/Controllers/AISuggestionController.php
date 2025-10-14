@@ -20,47 +20,53 @@ class AISuggestionController extends Controller
     {
         try {
             $request->validate([
-                'image' => 'required|image|max:5120', // max 5MB
+                'image' => 'nullable|image|max:5120', // max 5MB
                 'type' => 'required|in:title,description,background',
+                "image_url" => "nullable|url",
             ]);
 
             // 1. Upload image temporarily to Cloudinary (ai_images folder)
-            $filePath = $request->file('image')->getRealPath();
-            $imageUrl = $this->cloudinary->uploadImage($filePath, 'ai_images');
+            if ($request->hasFile('image')) {
+
+                $filePath = $request->file('image')->getRealPath();
+                $imageUrl = $this->cloudinary->uploadImage($filePath, 'ai_images');
+            } else {
+                $imageUrl = $request->input('image_url');
+            }
 
             if (!$imageUrl) {
                 throw new Exception("Image upload failed");
             }
             $type = $request->input('type'); // default to description
 
-            if ($type === 'background') {
-                $processedUrl = $this->cloudinary->removeBackground($filePath, 'ai_images');
+            // if ($type === 'background') {
+            //     $processedUrl = $this->cloudinary->removeBackground($filePath, 'ai_images');
 
-                if (!$processedUrl) {
-                    throw new Exception("Background removal failed");
-                }
+            //     if (!$processedUrl) {
+            //         throw new Exception("Background removal failed");
+            //     }
 
-                return response()->json([
-                    'success' => true,
-                    'type' => $type,
-                    'processed_url' => $processedUrl,
-                ]);
-            }
+            //     return response()->json([
+            //         'success' => true,
+            //         'type' => $type,
+            //         'processed_url' => $processedUrl,
+            //     ]);
+            // }
 
             // 2. Build prompt depending on type
             $prompt = match ($type) {
-              'title' => "Write a short and natural product title based on this image. 
+                'title' => "Write a short and natural product title based on this image. 
                 Keep it simple and human, like a real product listing. 
                 Identify the exact product name from this image, including the brand and model if visible (e.g., 'Apple iPhone 17') if possible.
                 Do not add quotes, colons, or extra creative phrases — just return the plain name of the item.",
 
-             'description' => "Write a friendly, engaging product description 
+                'description' => "Write a friendly, engaging product description 
                 that highlights what makes this item special. 
                 Strict rule: The description MUST NOT exceed 500 characters (including spaces). 
                 Do not write more than 500 characters. If it's longer, cut it short. 
                 Identify the exact product name (brand + model) if visible, e.g., 'Apple iPhone 17'.",
-                        
-             default => throw new Exception("Invalid suggestion type: $type"),
+
+                default => throw new Exception("Invalid suggestion type: $type"),
             };
 
             // 3. Call OpenAI to get suggestions
@@ -87,7 +93,6 @@ class AISuggestionController extends Controller
                 'type' => $type,
                 'suggestion' => $suggestion,
             ]);
-
         } catch (Exception $e) {
             return response()->json([
                 'success' => false,

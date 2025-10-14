@@ -100,4 +100,50 @@ class ProductController extends Controller
             'product' => $product->load('images'),
         ]);
     }
+
+
+    public function update(Product $product, Request $request)
+    {
+        if ($product->business_id !== $request->user()->business->id) {
+            abort(403);
+        }
+
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'price' => 'nullable|numeric',
+            'stock' => 'nullable|integer',
+            'images' => 'nullable|array',
+            'images.*' => 'file|mimes:jpg,jpeg,png|max:5120', // 5MB limit per image
+        ]);
+
+        $product->update([
+            'name' => $data['name'],
+            'description' => $data['description'] ?? null,
+            'price' => $data['price'] ?? null,
+            'stock' => $data['stock'] ?? null,
+        ]);
+
+        // Upload new images to Cloudinary
+        if (!empty($data['images'])) {
+            $cloudinary = new CloudinaryService();
+
+            foreach ($data['images'] as $imageFile) {
+                $path = $imageFile->getRealPath();
+
+                $url = $cloudinary->uploadImage($path, 'products');
+
+                if ($url) {
+                    $product->images()->create([
+                        'url' => $url,
+                        'product_id' => $product->id,
+                    ]);
+                }
+            }
+        }
+
+        return redirect()
+            ->route('products.edit', $product->id)
+            ->with('success', 'Product updated successfully!');
+    }
 }

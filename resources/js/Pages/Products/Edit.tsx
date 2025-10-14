@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useForm } from "@inertiajs/react";
+import { useForm, usePage } from "@inertiajs/react";
 import {
     Camera,
     X,
@@ -20,21 +20,21 @@ import type {
     AIActionType,
 } from "@/Types/create-product.type";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
-import { Head } from "@inertiajs/react";
+import { Head, router } from "@inertiajs/react";
 
 export default function EditPage({ product }: { product: any }) {
     // Initialize form with existing product data
     const initialImages: ImageUpload[] = (product.images || []).map(
         (img: any, index: number) => ({
-            id: `${Date.now()}-${index}`,
+            id: img.id.toString(),
             file: null, // No local file, using URL
             preview: img.url, // Assuming img has a 'url' property
             name: img.name || `Image ${index + 1}`,
             lastUpdated: new Date(),
         })
     );
-    console.log("Initial Images:", initialImages);
-    const { data, setData, post, processing, errors } = useForm({
+
+    const { data, setData, put, processing, errors } = useForm({
         name: product.name || "",
         description: product.description || "",
         price: product.price || "",
@@ -49,10 +49,10 @@ export default function EditPage({ product }: { product: any }) {
         description: false,
         background: null,
     });
-    const [imageVersion, setImageVersion] = useState(0);
 
     const MAX_IMAGES = 6;
     const MAX_DESCRIPTION_LENGTH = 500;
+
 
     const handleImageUpload = (files: FileList | null): void => {
         if (!files) return;
@@ -78,18 +78,56 @@ export default function EditPage({ product }: { product: any }) {
     };
 
     const removeImage = (id: string): void => {
-        const updatedImages: ImageUpload[] = images.filter(
-            (img: ImageUpload) => img.id !== id.toString()
-        );
-        setImages(updatedImages);
-        setData(
-            "images",
-            updatedImages
-                .map((img: ImageUpload) => img.file)
-                .filter((file): file is File => file !== null)
-        );
-    };
+       
+      
+        const imgToRemove = images.find((img) => img.id === id);
+        if (!imgToRemove) return;
 
+         // ✅ If it's a new image (not yet uploaded), just remove locally
+        if (imgToRemove.file) {
+            const updatedImages = images.filter((img) => img.id !== id);
+            setImages(updatedImages);
+            setData(
+            "images",
+            updatedImages.map((img) => img.file).filter((file): file is File => !!file)
+            );
+            return;
+        }
+
+        if (!confirm("Are you sure you want to remove this image?")) return;
+      
+        router.delete(route('image.delete', imgToRemove.id), {
+          preserveScroll: true,
+          onSuccess: (page) => {
+            console.log({
+                page
+            })
+            const success = (page.props?.flash as { success?: boolean })?.success;
+            const error = (page.props?.flash as { error?: boolean })?.error;
+            if(error) {
+                alert(error)
+                return;
+            }
+            if (!success) {
+                alert("No confirmation from server. Try again.");
+                return;
+             }// don't remove unless backend confirms success
+      
+            const updatedImages = images.filter((img) => img.id !== id);
+            setImages(updatedImages);
+            setData(
+              "images",
+              updatedImages.map((img) => img.file).filter((file): file is File => !!file)
+            );
+            alert(success)
+          },
+          onError: (errors) => {
+            console.error(errors);
+            alert("Failed to delete image. Try again.");
+          },
+        });
+      };
+      
     const handleDrop = (e: React.DragEvent<HTMLDivElement>): void => {
         e.preventDefault();
         setDragActive(false);
@@ -131,8 +169,10 @@ export default function EditPage({ product }: { product: any }) {
             const formData = new FormData();
             formData.append("type", type);
 
+            console.log({ selectedImage });
+
             if (selectedImage.file === null) {
-                formData.append("image", selectedImage.preview);
+                formData.append("image_url", selectedImage.preview);
             } else {
                 formData.append("image", selectedImage.file);
             }
@@ -201,9 +241,13 @@ export default function EditPage({ product }: { product: any }) {
 
     const submit = (e: React.MouseEvent<HTMLButtonElement>): void => {
         e.preventDefault();
-
-        console.log("Submitting form with data:", data);
-        post("/products");
+        console.log(data)
+        router.post(`/products/${product.id}`, {
+            ...data,
+            _method: 'PUT',
+        }, {
+            forceFormData: true, 
+        });
     };
 
     const goBack = (): void => {
@@ -221,7 +265,7 @@ export default function EditPage({ product }: { product: any }) {
 
     return (
         <Authenticated>
-            <Head title="Create Product" />
+            <Head title="Update Product" />
             <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                     {/* Header Section */}
@@ -342,7 +386,6 @@ export default function EditPage({ product }: { product: any }) {
                                             </h4>
                                             <div
                                                 className="grid grid-cols-2 gap-3"
-                                                key={imageVersion}
                                             >
                                                 {images.map(
                                                     (
@@ -436,7 +479,7 @@ export default function EditPage({ product }: { product: any }) {
                                         <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">
                                             Product Name *
                                         </label>
-                                        <div className="flex gap-3">
+                                        <div className="flex md:flex-row flex-col space-y-3 md:space-y-0 md:space-x-3">
                                             <div className="flex-1">
                                                 <input
                                                     type="text"
@@ -461,7 +504,7 @@ export default function EditPage({ product }: { product: any }) {
                                                     handleAISuggestion("title")
                                                 }
                                                 disabled={aiLoading.title}
-                                                className="px-5 py-3 bg-purple-700 hover:from-indigo-700 hover:to-purple-700 text-white rounded-xl transition-all duration-200 disabled:opacity-50 flex items-center gap-2 whitespace-nowrap shadow-md hover:shadow-lg"
+                                                className="px-5 w-full h-12 md:w-auto py-3 bg-purple-700 hover:from-indigo-700 hover:to-purple-700 text-white rounded-xl transition-all duration-200 disabled:opacity-50 flex items-center gap-2 whitespace-nowrap shadow-md hover:shadow-lg"
                                             >
                                                 {aiLoading.title ? (
                                                     <>
@@ -658,7 +701,7 @@ export default function EditPage({ product }: { product: any }) {
                                     ) : (
                                         <>
                                             <Save size={20} />
-                                            Create Product
+                                            Update Product
                                         </>
                                     )}
                                 </button>
@@ -670,3 +713,4 @@ export default function EditPage({ product }: { product: any }) {
         </Authenticated>
     );
 }
+

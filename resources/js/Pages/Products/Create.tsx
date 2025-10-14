@@ -37,8 +37,6 @@ export default function ModernCreate() {
         description: false,
         background: null,
     });
-    const [imageVersion, setImageVersion] = useState(0);
-
     const MAX_IMAGES = 6;
     const MAX_DESCRIPTION_LENGTH = 500;
 
@@ -189,8 +187,6 @@ export default function ModernCreate() {
 
     const submit = (e: React.MouseEvent<HTMLButtonElement>): void => {
         e.preventDefault();
-
-        console.log("Submitting form with data:", data);
         post("/products");
     };
 
@@ -330,7 +326,6 @@ export default function ModernCreate() {
                                             </h4>
                                             <div
                                                 className="grid grid-cols-2 gap-3"
-                                                key={imageVersion}
                                             >
                                                 {images.map(
                                                     (
@@ -424,7 +419,7 @@ export default function ModernCreate() {
                                         <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">
                                             Product Name *
                                         </label>
-                                        <div className="flex gap-3">
+                                        <div className="flex md:flex-row flex-col space-y-3 md:space-y-0 md:space-x-3">
                                             <div className="flex-1">
                                                 <input
                                                     type="text"

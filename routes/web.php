@@ -55,10 +55,10 @@ Route::middleware('auth')->group(function () {
         });
 
         Route::get('/media-library',[MediaLibraryController::class, 'index'])->name('media.library');
-        
+        Route::delete('/image/delete/{id}', [MediaLibraryController::class, 'deleteImage'])->name('image.delete');
 
-    Route::post('/ai/suggestion', [AISuggestionController::class, 'suggest'])
-    ->name('ai.suggestion');
+
+    Route::post('/ai/suggestion', [AISuggestionController::class, 'suggest'])->name('ai.suggestion');
 
     });
 });

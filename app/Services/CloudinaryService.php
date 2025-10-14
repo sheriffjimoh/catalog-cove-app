@@ -41,4 +41,16 @@ class CloudinaryService
 
         return $result['secure_url'] ?? null;
     }
+
+
+    public function deleteImage(string $publicId): bool
+    {
+        try {
+            return (new UploadApi())->destroy($publicId)['result'] === 'ok';
+        } catch (\Exception $e) {
+            Log::error("Cloudinary deletion error: {$e->getMessage()}");
+            return false;
+        }
+    }
+    
 }
