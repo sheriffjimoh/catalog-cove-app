@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Image, Zap, Trash2, Download, Calendar, Package, ChevronDown, ChevronUp, Search } from 'lucide-react';
 import Authenticated from '@/Layouts/AuthenticatedLayout';
+import { Head } from '@inertiajs/react';
 
 // Types
 interface ProductImage {
@@ -8,66 +9,23 @@ interface ProductImage {
   url: string;
   originalUrl?: string;
   hasBackground: boolean;
-  uploadedAt: Date;
+  updatedAt: Date;
+  createdAt: Date;
 }
 
 interface Product {
+  created_at: string;
   id: string;
   name: string;
   createdAt: Date;
   images: ProductImage[];
 }
 
-// Mock data
-const mockProducts: Product[] = [
-  {
-    id: '1',
-    name: 'Premium Gold Necklaces Collection',
-    createdAt: new Date('2025-10-10'),
-    images: [
-      {
-        id: '1-1',
-        url: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400',
-        hasBackground: true,
-        uploadedAt: new Date('2025-10-10')
-      },
-      {
-        id: '1-2',
-        url: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=400',
-        hasBackground: true,
-        uploadedAt: new Date('2025-10-10')
-      },
-      {
-        id: '1-3',
-        url: 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=400',
-        hasBackground: false,
-        uploadedAt: new Date('2025-10-11')
-      }
-    ]
-  },
-  {
-    id: '2',
-    name: 'Luxury Black Studded Loafers',
-    createdAt: new Date('2025-10-12'),
-    images: [
-      {
-        id: '2-1',
-        url: 'https://images.unsplash.com/photo-1533867617858-e7b97e060509?w=400',
-        hasBackground: true,
-        uploadedAt: new Date('2025-10-12')
-      },
-      {
-        id: '2-2',
-        url: 'https://images.unsplash.com/photo-1603808033192-082d6919d3e1?w=400',
-        hasBackground: true,
-        uploadedAt: new Date('2025-10-12')
-      }
-    ]
-  }
-];
 
-export default function MediaManager() {
-  const [products, setProducts] = useState<Product[]>(mockProducts);
+export default function MediaManager({ productswithImages }: { productswithImages: Product[] }) {
+
+
+  const [products, setProducts] = useState<Product[]>(productswithImages);
   const [expandedProducts, setExpandedProducts] = useState<Set<string>>(new Set(['1']));
   const [processingImages, setProcessingImages] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState('');
@@ -144,13 +102,14 @@ export default function MediaManager() {
 
   return (
     <Authenticated>
+      <Head title="Media Manager" />
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-4 mb-6">
-            <div className="p-3 bg-indigo-600 rounded-xl shadow-lg">
+            <div className="p-3 bg-purple-600 rounded-xl shadow-lg">
               <Image className="text-white" size={28} />
             </div>
             <div>
@@ -245,7 +204,7 @@ export default function MediaManager() {
                       <div className="flex items-center gap-4 mt-1 text-sm text-slate-500 dark:text-slate-400">
                         <span className="flex items-center gap-1">
                           <Calendar size={14} />
-                          {product.createdAt.toLocaleDateString()}
+                          {product.created_at.split('T')[0]}
                         </span>
                         <span className="flex items-center gap-1">
                           <Image size={14} />
@@ -263,7 +222,7 @@ export default function MediaManager() {
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                       {product.images.map((image) => {
                         const isProcessing = processingImages.has(image.id);
-                        
+                        console.log("Image Processing State:", image.id, isProcessing, image);
                         return (
                           <div
                             key={image.id}
