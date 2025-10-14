@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect, useState} from "react";
 import { Link, useForm, router, Head } from "@inertiajs/react";
 import DataTable from "@/Components/DataTable";
 import  AuthenticatedLayout  from "@/Layouts/AuthenticatedLayout";
 import { TextInput } from "@/Components/TextInput";
+import ActionDropDown from "@/Components/ActionDropDown";
 
 interface Product {
   id: number;
@@ -22,18 +23,14 @@ interface Props {
 }
 
 export default function Index({ products, filters }: Props) {
-  const { data, setData } = useForm({ search: filters.search || "" });
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    router.get("/products", { search: data.search }, { preserveState: true });
-  };
 
   const handleDelete = (id: number) => {
     if (confirm("Are you sure you want to delete this product?")) {
       router.delete(`/products/${id}`);
     }
   };
+
 
   return (
     <AuthenticatedLayout>
@@ -49,19 +46,10 @@ export default function Index({ products, filters }: Props) {
         </Link>
       </div>
 
-      {/* Search */}
-      <form onSubmit={handleSearch} className="mb-4">
-        <TextInput
-          type="text"
-          placeholder="Search products..."
-          value={data.search}
-          onChange={(e) => setData("search", e.target.value)}
-          className="w-full border rounded p-2"
-        />
-      </form>
-
       {/* Generic Table */}
       <DataTable<Product>
+        filters={filters}
+        searchLink="/products"
         columns={[
           { key: "name", label: "Name" },
           { key: "price", label: "Price" },
@@ -75,22 +63,9 @@ export default function Index({ products, filters }: Props) {
           {
             key: "actions",
             label: "Actions",
-            render: (row) => (
-              <div className="space-x-2 text-right">
-                <Link
-                  href={`products/${row.id}/edit`}
-                  className="text-purple-700 hover:underline"
-                >
-                  Edit
-                </Link>
-                <button
-                  onClick={() => handleDelete(row.id)}
-                  className="text-red-600 hover:underline"
-                >
-                  Delete
-                </button>
-              </div>
-            ),
+              render: (row) => (
+                <ActionDropDown row={row} handleDelete={handleDelete} />
+              ),
             className: "text-right",
           },
         ]}

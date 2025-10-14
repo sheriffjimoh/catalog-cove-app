@@ -61,7 +61,7 @@ const Topbar: React.FC<TopbarProps> = ({
                     </div>
                   )}
                   <div className="hidden sm:block text-left">
-                    <p className="text-sm font-medium text-gray-700 dark:text-gray-50">{userName}</p>
+                    <p className="text-sm font-medium text-gray-700 dark:text-gray-50 capitalize">{userName}</p>
                     <p className="text-xs text-gray-500 dark:text-gray-200">{userRole}</p>
                   </div>
                   <ChevronDown className="h-4 w-4 text-gray-500" />
@@ -80,7 +80,7 @@ const Topbar: React.FC<TopbarProps> = ({
                     Profile
                   </Link>
 
-                  <ThemeToggle inDropdown={true} closeDropdown={() =>console.log("Let'g GOOOOOoo")} />
+                  <ThemeToggle inDropdown={true} closeDropdown={() => setUserDropdownOpen(false)} />
       
                   <button
                     onClick={handleLogout}

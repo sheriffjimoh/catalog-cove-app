@@ -2,6 +2,7 @@ import { usePage } from "@inertiajs/react";
 import { PropsWithChildren, ReactNode, useEffect, useState } from "react";
 import Sidebar from "@/Components/Sidebar";
 import Topbar from "@/Components/Topbar";
+import { useSonner } from "@/Hooks/useSonner";
 
 export default function Authenticated({
     children,
@@ -13,17 +14,17 @@ export default function Authenticated({
         // Implement logout functionality here
         console.log("Logout function called");
     };
-
+    const { customSonner } = useSonner();
     const pageProps = usePage().props;
     const flash = pageProps.flash as { success?: string; error?: string };
 
     useEffect(() => {
         if (flash.success) {
-            alert(flash.success);
+            customSonner({ type: "success", text: flash.success });
         }
 
         if (flash.error) {
-            alert(flash.error);
+            customSonner({ type: "error", text: flash.error });
         }
     }, [flash]);
 

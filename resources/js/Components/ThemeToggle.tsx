@@ -7,7 +7,7 @@ interface ThemeToggleProps {
   closeDropdown?: () => void;
 }
 
-export const ThemeToggle: React.FC<ThemeToggleProps> = ({ inDropdown = false }) => {
+export const ThemeToggle: React.FC<ThemeToggleProps> = ({ inDropdown = false, closeDropdown }) => {
   const { resolvedTheme, setTheme } = useTheme();
 
   // Determine what to show based on current resolved theme
@@ -18,6 +18,9 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({ inDropdown = false }) 
 
   const handleToggle = () => {
     setTheme(targetTheme);
+    if (inDropdown && closeDropdown) {
+      closeDropdown();
+    }
   };
 
   if (inDropdown) {
