@@ -21,6 +21,7 @@ import type {
 } from "@/Types/create-product.type";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
 import { Head, router } from "@inertiajs/react";
+import { useSonner } from "@/Hooks/useSonner";
 
 export default function EditPage({ product }: { product: any }) {
     // Initialize form with existing product data
@@ -49,6 +50,7 @@ export default function EditPage({ product }: { product: any }) {
         description: false,
         background: null,
     });
+    const { customSonner } = useSonner();
 
     const MAX_IMAGES = 6;
     const MAX_DESCRIPTION_LENGTH = 500;
@@ -169,8 +171,6 @@ export default function EditPage({ product }: { product: any }) {
             const formData = new FormData();
             formData.append("type", type);
 
-            console.log({ selectedImage });
-
             if (selectedImage.file === null) {
                 formData.append("image_url", selectedImage.preview);
             } else {
@@ -241,7 +241,6 @@ export default function EditPage({ product }: { product: any }) {
 
     const submit = (e: React.MouseEvent<HTMLButtonElement>): void => {
         e.preventDefault();
-        console.log(data)
         router.post(`/products/${product.id}`, {
             ...data,
             _method: 'PUT',
@@ -420,9 +419,12 @@ export default function EditPage({ product }: { product: any }) {
                                                                     <button
                                                                         type="button"
                                                                         onClick={() =>
-                                                                            removeImage(
-                                                                                image.id
-                                                                            )
+                                                                            customSonner({ type: 'info', text: 'Are you sure you want to delete this image?',
+                                                                                actionLabel: 'Yes', actionOnClick: () =>   removeImage(
+                                                                                    image.id
+                                                                                )
+                                                                               })
+                                                                           
                                                                         }
                                                                         className="p-1 bg-red-500 hover:bg-red-600 text-white rounded-full transition-colors"
                                                                         aria-label={`Remove image ${

@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import { Image, Zap, Trash2, Download, Calendar, Package, ChevronDown, ChevronUp, Search } from 'lucide-react';
 import Authenticated from '@/Layouts/AuthenticatedLayout';
-import { Head } from '@inertiajs/react';
+import { Head, router } from '@inertiajs/react';
+import { useSonner } from '@/Hooks/useSonner';
 
 // Types
 interface ProductImage {
   id: string;
   url: string;
   originalUrl?: string;
-  hasBackground: boolean;
+  isProcessed: boolean;
   updatedAt: Date;
   createdAt: Date;
 }
@@ -29,6 +30,7 @@ export default function MediaManager({ productswithImages }: { productswithImage
   const [expandedProducts, setExpandedProducts] = useState<Set<string>>(new Set(['1']));
   const [processingImages, setProcessingImages] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState('');
+  const { customSonner } = useSonner();
 
   const toggleProduct = (productId: string) => {
     setExpandedProducts(prev => {
@@ -76,17 +78,34 @@ export default function MediaManager({ productswithImages }: { productswithImage
   };
 
   const deleteImage = (productId: string, imageId: string) => {
-    if (confirm('Are you sure you want to delete this image?')) {
-      setProducts(prev => prev.map(product => {
-        if (product.id === productId) {
-          return {
-            ...product,
-            images: product.images.filter(img => img.id !== imageId)
-          };
-        }
-        return product;
-      }));
-    }
+
+      router.delete(route('image.delete', imageId), {
+              preserveScroll: true,
+              onSuccess: (page) => {
+               
+                const success = (page.props?.flash as { success?: boolean })?.success;
+                const error = (page.props?.flash as { error?: boolean })?.error;
+                if(error) {
+                    return;
+                }
+                if (!success) {
+                    return;
+                 }
+                  setProducts(prev => prev.map(product => {
+                  if (product.id === productId) {
+                    return {
+                      ...product,
+                      images: product.images.filter(img => img.id !== imageId)
+                    };
+                  }
+                  return product;
+                }));
+              },
+              onError: (errors) => {
+                console.error(errors);
+                alert("Failed to delete image. Try again.");
+              },
+            });
   };
 
   const downloadImage = (url: string, filename: string) => {
@@ -168,7 +187,7 @@ export default function MediaManager({ productswithImages }: { productswithImage
               <div>
                 <p className="text-sm text-slate-600 dark:text-slate-400">Processed</p>
                 <p className="text-3xl font-bold text-slate-900 dark:text-white mt-1">
-                  {products.reduce((sum, p) => sum + p.images.filter(img => !img.hasBackground).length, 0)}
+                  {products.reduce((sum, p) => sum + p.images.filter(img => img.isProcessed).length, 0)}
                 </p>
               </div>
               <div className="p-3 bg-green-100 dark:bg-green-900/30 rounded-lg">
@@ -188,6 +207,7 @@ export default function MediaManager({ productswithImages }: { productswithImage
                 key={product.id}
                 className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden"
               >
+                
                 {/* Product Header */}
                 <button
                   onClick={() => toggleProduct(product.id)}
@@ -235,7 +255,7 @@ export default function MediaManager({ productswithImages }: { productswithImage
                             />
                             
                             {/* Status Badge */}
-                            {!image.hasBackground && (
+                            {image.isProcessed && (
                               <div className="absolute top-2 left-2">
                                 <span className="px-2 py-1 bg-green-500 text-white text-xs font-medium rounded-md flex items-center gap-1">
                                   <Zap size={10} />
@@ -246,7 +266,7 @@ export default function MediaManager({ productswithImages }: { productswithImage
 
                             {/* Hover Overlay */}
                             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/60 transition-all duration-200 flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100">
-                              {image.hasBackground && !isProcessing && (
+                              {!image.isProcessed && !isProcessing && (
                                 <button
                                   onClick={() => removeBackground(product.id, image.id)}
                                   className="p-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors"
@@ -272,7 +292,11 @@ export default function MediaManager({ productswithImages }: { productswithImage
                               </button>
                               
                               <button
-                                onClick={() => deleteImage(product.id, image.id)}
+                                onClick={() => 
+                                  customSonner({ type: 'info', text: 'Are you sure you want to delete this image?',
+                                    actionLabel: 'Yes', actionOnClick: () =>  deleteImage(product.id, image.id)
+                                   })
+                                  }
                                 className="p-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
                                 title="Delete"
                               >

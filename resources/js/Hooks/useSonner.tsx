@@ -82,7 +82,7 @@ export function useSonner() {
 				return (
 					<div
 						className={cn(
-							'md:w-[23.125rem] w-full border rounded-lg p-3 relative dark:bg-[#09090B] bg-[#ffff]',
+							'md:w-[23.125rem] w-full border rounded-lg p-3 flex flex-col relative dark:bg-[#09090B] bg-[#ffff]',
 							styles[type as keyof typeof styles],
 						)}
 					>
@@ -97,18 +97,7 @@ export function useSonner() {
 						</p>
 
 						<div className="absolute inset-y-0 flex items-center right-3">
-							{actionLabel && actionOnClick && (
-								<button
-									className="border dark:border-[#27272A] border-[#E4E4E7] rounded-md py-1.5 px-3 text-sm dark:text-[#fafafa] text-[#09090B] hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-									type="button"
-									onClick={() => {
-										toast.dismiss(t)
-										actionOnClick()
-									}}
-								>
-									{actionLabel}
-								</button>
-							)}
+							
 							<button
 								className="border dark:border-[#27272A] border-[#E4E4E7] rounded-md py-1.5 px-2 text-sm dark:text-[#fafafa] text-[#09090B]"
 								type="button"
@@ -117,6 +106,20 @@ export function useSonner() {
 								{config.button}
 							</button>
 						</div>
+						{actionLabel && actionOnClick && (
+							<div className="absolute inset-y-0 flex items-center right-16">
+								<button
+									className="border dark:border-[#27272A] border-[#E4E4E7] rounded-md py-1.5 px-2 text-sm dark:text-[#fafafa] text-[#09090B]"
+									type="button"
+									onClick={() => {
+										actionOnClick()
+										toast.dismiss(t)
+									}}
+								>
+									{actionLabel}
+								</button>
+							</div>
+						)}
 					</div>
 				)
 			},
