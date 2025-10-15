@@ -8,8 +8,7 @@ import { useSonner } from '@/Hooks/useSonner';
 interface ProductImage {
   id: string;
   url: string;
-  originalUrl?: string;
-  isProcessed: boolean;
+  is_processed: boolean;
   updatedAt: Date;
   createdAt: Date;
 }
@@ -44,38 +43,26 @@ export default function MediaManager({ productswithImages }: { productswithImage
     });
   };
 
+
   const removeBackground = async (productId: string, imageId: string) => {
     setProcessingImages(prev => new Set(prev).add(imageId));
     
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    setProducts(prev => prev.map(product => {
-      if (product.id === productId) {
-        return {
-          ...product,
-          images: product.images.map(img => {
-            if (img.id === imageId) {
-              return {
-                ...img,
-                originalUrl: img.url,
-                hasBackground: false,
-                url: img.url + '?processed=true' // Simulate processed URL
-              };
-            }
-            return img;
-          })
-        };
+    router.post(
+      route('image.remove-bg'),
+      { image_id: imageId },
+      {
+        preserveState: false, // Reload page data to get updated image
+        onFinish: () => {
+          setProcessingImages(prev => {
+            const newSet = new Set(prev);
+            newSet.delete(imageId);
+            return newSet;
+          });
+        }
       }
-      return product;
-    }));
-    
-    setProcessingImages(prev => {
-      const newSet = new Set(prev);
-      newSet.delete(imageId);
-      return newSet;
-    });
+    );
   };
+
 
   const deleteImage = (productId: string, imageId: string) => {
 
@@ -108,17 +95,19 @@ export default function MediaManager({ productswithImages }: { productswithImage
             });
   };
 
-  const downloadImage = (url: string, filename: string) => {
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = filename;
-    link.click();
-  };
+    const downloadImage = (url: string, filename: string) => {
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      link.click();
+    };
 
-  const filteredProducts = products.filter(product =>
-    product.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+    const filteredProducts = products.filter(product =>
+      product.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
+
+  console.log("Rendering MediaManager with products:", productswithImages);
   return (
     <Authenticated>
       <Head title="Media Manager" />
@@ -187,7 +176,7 @@ export default function MediaManager({ productswithImages }: { productswithImage
               <div>
                 <p className="text-sm text-slate-600 dark:text-slate-400">Processed</p>
                 <p className="text-3xl font-bold text-slate-900 dark:text-white mt-1">
-                  {products.reduce((sum, p) => sum + p.images.filter(img => img.isProcessed).length, 0)}
+                  {products.reduce((sum, p) => sum + p.images.filter(img => img.is_processed).length, 0)}
                 </p>
               </div>
               <div className="p-3 bg-green-100 dark:bg-green-900/30 rounded-lg">
@@ -255,7 +244,7 @@ export default function MediaManager({ productswithImages }: { productswithImage
                             />
                             
                             {/* Status Badge */}
-                            {image.isProcessed && (
+                            {image.is_processed && (
                               <div className="absolute top-2 left-2">
                                 <span className="px-2 py-1 bg-green-500 text-white text-xs font-medium rounded-md flex items-center gap-1">
                                   <Zap size={10} />
@@ -266,7 +255,7 @@ export default function MediaManager({ productswithImages }: { productswithImage
 
                             {/* Hover Overlay */}
                             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/60 transition-all duration-200 flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100">
-                              {!image.isProcessed && !isProcessing && (
+                              {!image.is_processed && !isProcessing && (
                                 <button
                                   onClick={() => removeBackground(product.id, image.id)}
                                   className="p-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors"

@@ -56,6 +56,8 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/media-library',[MediaLibraryController::class, 'index'])->name('media.library');
         Route::delete('/image/delete/{id}', [MediaLibraryController::class, 'deleteImage'])->name('image.delete');
+        Route::post('/image/remove-bg', [MediaLibraryController::class, 'removeBackground'])
+        ->name('image.remove-bg');
 
 
     Route::post('/ai/suggestion', [AISuggestionController::class, 'suggest'])->name('ai.suggestion');
