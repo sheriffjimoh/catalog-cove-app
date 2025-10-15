@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "@inertiajs/react";
 import { TextInput } from "./TextInput";
 import { router } from "@inertiajs/react";
+import { Search } from "lucide-react";
 
 interface Column<T> {
     key: keyof T | string;
@@ -52,13 +53,19 @@ export default function DataTable<T extends { id: number }>({
 
     return (
         <div>
-            <TextInput
-                type="search"
-                placeholder="Search products..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="mb-4 w-full focus:ring-purple-500 focus:border-purple-500"
-            />
+            <div className="relative mb-4">
+                <Search
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+                    size={20}
+                />
+                <input
+                    type="text"
+                    placeholder="Search products..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    className="w-full pl-10 pr-4 py-3 border border-slate-300 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent dark:dark:bg-slate-900  dark:text-white"
+                />
+            </div>
 
             {/* Table */}
             <div className="overflow-x-auto dark:text-white bg-gray-200 dark:bg-gray-900 rounded-lg shadow">
@@ -83,7 +90,7 @@ export default function DataTable<T extends { id: number }>({
                             data.map((row, rowIndex) => (
                                 <tr
                                     key={row.id}
-                                    className=" border-b bg-slate-50 dark:border-gray-700  dark:bg-gray-900  hover:bg-gray-100 dark:hover:bg-gray-700"
+                                    className=" border-b bg-white dark:border-gray-700  dark:bg-gray-900  hover:bg-gray-100 dark:hover:bg-gray-700"
                                 >
                                     <td className="p-3 text-center text-gray-600 dark:text-gray-400">
                                         {rowIndex + 1}

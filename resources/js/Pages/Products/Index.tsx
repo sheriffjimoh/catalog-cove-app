@@ -35,7 +35,7 @@ export default function Index({ products, filters }: Props) {
   return (
     <AuthenticatedLayout>
     <Head title="Products" />
-    <div className="p-6 max-w-6xl mx-auto dark:bg-gray-800 bg-gray-100 rounded-lg shadow">
+    <div className="p-6 max-w-6xl mx-auto dark:bg-gray-800 bg-slate-50 rounded-lg shadow">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold dark:text-white  text-black">Products</h1>
         <Link
