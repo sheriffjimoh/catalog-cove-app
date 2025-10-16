@@ -1,0 +1,43 @@
+<?php
+/**
+ * Cloudinary Test Script Example
+ * 
+ * This is a template for testing Cloudinary uploads.
+ * Copy this file to cloudinary_test.php and add your credentials.
+ * 
+ * IMPORTANT: Never commit cloudinary_test.php with real credentials!
+ */
+
+require __DIR__ . '/vendor/autoload.php';
+
+use Cloudinary\Configuration\Configuration;
+use Cloudinary\Api\Upload\UploadApi;
+
+// Replace with your actual Cloudinary URL from your .env file
+// Format: cloudinary://api_key:api_secret@cloud_name
+$cloudinaryUrl = getenv('CLOUDINARY_URL') ?: 'cloudinary://YOUR_API_KEY:YOUR_API_SECRET@YOUR_CLOUD_NAME';
+
+// Configure Cloudinary
+Configuration::instance($cloudinaryUrl);
+
+// Test upload
+try {
+    // Make sure the image exists at this path
+    $testImagePath = __DIR__ . '/public/images/logo.png';
+    
+    if (!file_exists($testImagePath)) {
+        echo "Error: Test image not found at: $testImagePath\n";
+        exit(1);
+    }
+    
+    echo "Uploading test image to Cloudinary...\n";
+    $result = (new UploadApi())->upload($testImagePath);
+    
+    echo "Upload successful!\n";
+    echo "URL: " . $result['secure_url'] . "\n";
+    echo "Public ID: " . $result['public_id'] . "\n";
+    
+} catch (Exception $e) {
+    echo 'Error: ' . $e->getMessage() . "\n";
+    exit(1);
+}
