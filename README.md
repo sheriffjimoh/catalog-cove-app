@@ -15,6 +15,7 @@
 - **[Quick Reference](QUICK_REFERENCE.md)** - Commands and troubleshooting guide
 - **[Architecture Documentation](ARCHITECTURE.md)** - Detailed technical documentation
 - **[System Flow Diagrams](SYSTEM_FLOWS.md)** - Visual diagrams of how the system works
+- **[Security Policy](SECURITY.md)** - Security best practices and guidelines
 - **[Laravel Documentation](https://laravel.com/docs)** - Learn about Laravel
 - **[React Documentation](https://react.dev)** - Learn about React
 
@@ -185,6 +186,7 @@ catalog-cove-app/
 - **[QUICK_REFERENCE.md](QUICK_REFERENCE.md)** - Commands and troubleshooting
 - **[ARCHITECTURE.md](ARCHITECTURE.md)** - Detailed technical architecture
 - **[SYSTEM_FLOWS.md](SYSTEM_FLOWS.md)** - Visual diagrams and flow charts
+- **[SECURITY.md](SECURITY.md)** - Security best practices and policies
 - **[Laravel Docs](https://laravel.com/docs)** - Framework documentation
 - **[Inertia.js Docs](https://inertiajs.com)** - SPA integration guide
 
@@ -195,8 +197,9 @@ catalog-cove-app/
 - ✅ SQL injection prevention via Eloquent ORM
 - ✅ XSS protection via React auto-escaping
 - ✅ File upload validation (type, size limits)
+- ✅ Exposed credentials removed and secured
 
-**⚠️ Security Note**: Remove `cloudinary_test.php` before deploying to production (contains test credentials).
+**📋 See [SECURITY.md](SECURITY.md) for detailed security guidelines and best practices.**
 
 ## 🤝 Contributing
 
@@ -233,3 +236,4 @@ Built with these amazing technologies:
 - 🚀 [QUICK_REFERENCE.md](QUICK_REFERENCE.md) - Commands & troubleshooting
 - 🏗️ [ARCHITECTURE.md](ARCHITECTURE.md) - Technical details
 - 🔄 [SYSTEM_FLOWS.md](SYSTEM_FLOWS.md) - Visual diagrams
+- 🔐 [SECURITY.md](SECURITY.md) - Security guidelines
