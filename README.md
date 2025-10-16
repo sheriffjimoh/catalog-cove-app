@@ -10,6 +10,7 @@
 
 ## 📖 Quick Links
 
+- **[Documentation Index](DOCS_INDEX.md)** - Guide to all documentation
 - **[What Is This?](WHAT_IS_THIS.md)** - Simple explanation of what this app does
 - **[Quick Reference](QUICK_REFERENCE.md)** - Commands and troubleshooting guide
 - **[Architecture Documentation](ARCHITECTURE.md)** - Detailed technical documentation
@@ -179,6 +180,7 @@ catalog-cove-app/
 
 ## 📚 Documentation
 
+- **[DOCS_INDEX.md](DOCS_INDEX.md)** - Navigation guide to all documentation
 - **[WHAT_IS_THIS.md](WHAT_IS_THIS.md)** - High-level overview for beginners
 - **[QUICK_REFERENCE.md](QUICK_REFERENCE.md)** - Commands and troubleshooting
 - **[ARCHITECTURE.md](ARCHITECTURE.md)** - Detailed technical architecture
