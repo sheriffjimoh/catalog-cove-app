@@ -12,6 +12,7 @@
 
 - **[What Is This?](WHAT_IS_THIS.md)** - Simple explanation of what this app does
 - **[Architecture Documentation](ARCHITECTURE.md)** - Detailed technical documentation
+- **[System Flow Diagrams](SYSTEM_FLOWS.md)** - Visual diagrams of how the system works
 - **[Laravel Documentation](https://laravel.com/docs)** - Learn about Laravel
 - **[React Documentation](https://react.dev)** - Learn about React
 
@@ -179,6 +180,7 @@ catalog-cove-app/
 
 - **[WHAT_IS_THIS.md](WHAT_IS_THIS.md)** - High-level overview for beginners
 - **[ARCHITECTURE.md](ARCHITECTURE.md)** - Detailed technical architecture
+- **[SYSTEM_FLOWS.md](SYSTEM_FLOWS.md)** - Visual diagrams and flow charts
 - **[Laravel Docs](https://laravel.com/docs)** - Framework documentation
 - **[Inertia.js Docs](https://inertiajs.com)** - SPA integration guide
 
@@ -222,4 +224,7 @@ Built with these amazing technologies:
 
 ---
 
-**Need Help?** Check out [WHAT_IS_THIS.md](WHAT_IS_THIS.md) for a simple explanation or [ARCHITECTURE.md](ARCHITECTURE.md) for technical details.
+**Need Help?** 
+- 📖 [WHAT_IS_THIS.md](WHAT_IS_THIS.md) - Simple explanation
+- 🏗️ [ARCHITECTURE.md](ARCHITECTURE.md) - Technical details
+- 🔄 [SYSTEM_FLOWS.md](SYSTEM_FLOWS.md) - Visual diagrams
