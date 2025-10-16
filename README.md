@@ -11,6 +11,7 @@
 ## 📖 Quick Links
 
 - **[What Is This?](WHAT_IS_THIS.md)** - Simple explanation of what this app does
+- **[Quick Reference](QUICK_REFERENCE.md)** - Commands and troubleshooting guide
 - **[Architecture Documentation](ARCHITECTURE.md)** - Detailed technical documentation
 - **[System Flow Diagrams](SYSTEM_FLOWS.md)** - Visual diagrams of how the system works
 - **[Laravel Documentation](https://laravel.com/docs)** - Learn about Laravel
@@ -179,6 +180,7 @@ catalog-cove-app/
 ## 📚 Documentation
 
 - **[WHAT_IS_THIS.md](WHAT_IS_THIS.md)** - High-level overview for beginners
+- **[QUICK_REFERENCE.md](QUICK_REFERENCE.md)** - Commands and troubleshooting
 - **[ARCHITECTURE.md](ARCHITECTURE.md)** - Detailed technical architecture
 - **[SYSTEM_FLOWS.md](SYSTEM_FLOWS.md)** - Visual diagrams and flow charts
 - **[Laravel Docs](https://laravel.com/docs)** - Framework documentation
@@ -226,5 +228,6 @@ Built with these amazing technologies:
 
 **Need Help?** 
 - 📖 [WHAT_IS_THIS.md](WHAT_IS_THIS.md) - Simple explanation
+- 🚀 [QUICK_REFERENCE.md](QUICK_REFERENCE.md) - Commands & troubleshooting
 - 🏗️ [ARCHITECTURE.md](ARCHITECTURE.md) - Technical details
 - 🔄 [SYSTEM_FLOWS.md](SYSTEM_FLOWS.md) - Visual diagrams
