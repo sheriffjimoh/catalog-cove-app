@@ -20,6 +20,7 @@ import type {
 } from "@/Types/create-product.type";
 import Authenticated from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
+import { useSonner } from "@/Hooks/useSonner";
 
 export default function ModernCreate() {
     const { data, setData, post, processing, errors } = useForm({
@@ -39,6 +40,8 @@ export default function ModernCreate() {
     });
     const MAX_IMAGES = 6;
     const MAX_DESCRIPTION_LENGTH = 500;
+    const { customSonner } = useSonner();
+    
 
     const handleImageUpload = (files: FileList | null): void => {
         if (!files) return;
@@ -155,7 +158,10 @@ export default function ModernCreate() {
             }
         } catch (err: any) {
             console.error(err);
-            alert(err.message || "AI request failed");
+            customSonner({
+                type: "error",
+                text: err.message || `Failed to get AI ${type} suggestion.`,
+            })
         } finally {
             // Reset loading
             setAiLoading((prev) => ({
