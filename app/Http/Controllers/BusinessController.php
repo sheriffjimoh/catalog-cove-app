@@ -40,4 +40,16 @@ class BusinessController extends Controller
             return redirect()->back()->withInput();
         }
     }
+
+
+    public function show($slug)
+    {
+        $business = Business::where('slug', $slug)
+            ->with('products') // eager load products
+            ->firstOrFail();
+
+        return Inertia::render('Business/View', [
+            'business' => $business,
+        ]);
+    }
 }

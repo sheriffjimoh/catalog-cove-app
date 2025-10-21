@@ -19,6 +19,13 @@ class BusinessObserver
         }
     }
 
+    public function saving(Business $business)
+{
+    if (empty($business->slug)) {
+        $business->slug = $this->generateUniqueSlug($business->name);
+    }
+}
+
     private function generateUniqueSlug(string $name): string
     {
         $slug = Str::slug($name);

@@ -10,11 +10,6 @@ use App\Observers\BusinessObserver;
 class AppServiceProvider extends ServiceProvider
 {
     
-    public function register(): void
-    {
-        //
-    }
-
     public function boot(): void
     {
         Vite::prefetch(concurrency: 3);
