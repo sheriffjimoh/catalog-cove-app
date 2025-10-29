@@ -6,6 +6,7 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Services\CloudinaryService;
+use App\Models\Business;
 
 class ProductController extends Controller
 {
@@ -161,5 +162,20 @@ class ProductController extends Controller
         return redirect()
             ->route('products.index')
             ->with('success', "Product has been {$status}.");
+    }
+
+    public function show($slug, $productSlug)
+    {
+        $product = Product::where('slug', $productSlug)->with('images', 'business')->firstOrFail();
+        if (!$product->is_published) {
+            abort(404);
+        }
+
+        $vendor = Business::where('slug', $slug)->firstOrFail();
+
+        return Inertia::render('Products/Show', [
+            'product' => $product,
+            'business' => $vendor,
+        ]);
     }
 }

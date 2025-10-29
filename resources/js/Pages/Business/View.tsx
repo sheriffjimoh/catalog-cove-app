@@ -1,40 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import  { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/Components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/Components/ui/badge';
 import { Alert, AlertDescription } from '@/Components/ui/alert';
-import { MapPin, Phone, Mail, MessageCircle, Package, Share2, Star, Heart, ShoppingBag, TrendingUp, Award, Shield, Clock, Eye, Filter, Search, Store } from 'lucide-react';
+import {  MessageCircle, Package, Share2, Star,  ShoppingBag, TrendingUp,  Clock, Eye, Search } from 'lucide-react';
 import StorePageHeader from '@/Components/StorePageHeader';
 import StorePageFooter from '@/Components/StorePageFooter';
-interface image {
-    id: number;
-    url: string;
-    is_processed: boolean;
-}
+import type { vendor, product } from '@/Types';
+import { handleShare, openWhatsApp } from '@/Lib/utils';
 
-interface product {
-    id: number;
-    name: string;
-    price: string;
-    description: string;
-    rating: number;
-    images: image[];
-    stock: string;
-    slug?: string;
-}
-
-interface vendor {
-    id: number;
-    name: string;
-    address: string;
-    phone: string;
-    email: string;
-    whatsapp: string;
-    coordinates: string;
-    short_note: string;
-    slug: string;
-    logo_url?: string;
-}
 
 const StoreListingPage = ({ business }: any) => {
     const [vendor, setVendor] = useState<vendor | null>(null);
@@ -79,37 +53,7 @@ const StoreListingPage = ({ business }: any) => {
         setFilteredProducts(filtered);
     }, [searchQuery, sortBy, products]);
 
-    const openMaps = () => {
-        if (vendor?.coordinates) {
-            window.open(`https://www.google.com/maps/search/?api=1&query=${vendor.coordinates}`, '_blank');
-        }
-    };
-
-    const openWhatsApp = () => {
-        if (vendor?.whatsapp) {
-            window.open(`https://wa.me/${vendor.whatsapp}`, '_blank');
-        }
-    };
-
-    const handleShare = async (product: product) => {
-        const shareData = {
-            title: product.name,
-            text: `Check out ${product.name} - ${product.price}`,
-            url: window.location.href
-        };
-
-        if (navigator.share) {
-            try {
-                await navigator.share(shareData);
-            } catch (err) {
-                console.log('Share cancelled');
-            }
-        } else {
-            navigator.clipboard.writeText(window.location.href);
-            alert('Link copied to clipboard!');
-        }
-    };
-
+ 
     const toggleLike = (productId: number) => {
         setLikedProducts(prev => {
             const newSet = new Set(prev);
@@ -124,7 +68,7 @@ const StoreListingPage = ({ business }: any) => {
 
     const viewProduct = (product: product) => {
         // Navigate to product page - adjust this based on your routing
-        window.location.href = `/store/${vendor?.slug}/product/${product.slug || product.id}`;
+        window.location.href = `/store/${vendor?.slug}/${product.slug || product.id}`;
     };
 
     if (loading) {
@@ -336,7 +280,7 @@ const StoreListingPage = ({ business }: any) => {
                     <div className="relative group">
                         <div className="absolute inset-0 bg-gradient-to-r from-green-500 to-green-600 rounded-full blur-xl opacity-50 group-hover:opacity-75 transition-opacity animate-pulse"></div>
                         <Button 
-                            onClick={openWhatsApp}
+                            onClick={() => openWhatsApp(vendor!, null!)}
                             size="lg"
                             className="relative rounded-full shadow-2xl bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 w-16 h-16 p-0 hover:scale-110 transition-all duration-300"
                             title="Chat on WhatsApp"

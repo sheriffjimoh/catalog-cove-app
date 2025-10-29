@@ -52,14 +52,17 @@ Route::middleware('auth')->group(function () {
             Route::get('/{product}/edit', [ProductController::class, 'edit'])->name('edit');
             Route::put('/{product}', [ProductController::class, 'update'])->name('update');
             Route::delete('/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
-            Route::get('/{product}/toggle-publish', [ProductController::class, 'togglePublish'])->name('toggle.publish');
+            Route::get('/{product}/toggle-publish', [ProductController::class, 'togglePublish'])->name('toggle.publish'); 
         });
 
         Route::get('/media-library',[MediaLibraryController::class, 'index'])->name('media.library');
         Route::delete('/image/delete/{id}', [MediaLibraryController::class, 'deleteImage'])->name('image.delete');
         Route::post('/image/remove-bg', [MediaLibraryController::class, 'removeBackground'])
         ->name('image.remove-bg');
-        Route::get('/business/{slug}', [BusinessController::class, 'show'])->name('business.show');
+
+        //store routes
+        Route::get('/store/{slug}', [BusinessController::class, 'show'])->name('business.show');
+        Route::get('/store/{slug}/{product}', [ProductController::class, 'show'])->name('show');
 
 
     Route::post('/ai/suggestion', [AISuggestionController::class, 'suggest'])->name('ai.suggestion');
