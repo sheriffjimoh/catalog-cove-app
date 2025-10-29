@@ -146,4 +146,20 @@ class ProductController extends Controller
             ->route('products.edit', $product->id)
             ->with('success', 'Product updated successfully!');
     }
+
+    public function togglePublish(Product $product, Request $request)
+    {
+        if ($product->business_id !== $request->user()->business->id) {
+            abort(403);
+        }
+
+        $product->is_published = !$product->is_published;
+        $product->save();
+
+        $status = $product->is_published ? 'published' : 'unpublished';
+
+        return redirect()
+            ->route('products.index')
+            ->with('success', "Product has been {$status}.");
+    }
 }

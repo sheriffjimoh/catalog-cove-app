@@ -1,4 +1,4 @@
-import { usePage } from "@inertiajs/react";
+import { router, usePage } from "@inertiajs/react";
 import { PropsWithChildren, ReactNode, useEffect, useState } from "react";
 import Sidebar from "@/Components/Sidebar";
 import Topbar from "@/Components/Topbar";
@@ -12,6 +12,7 @@ export default function Authenticated({
         useState(false);
     const onLogout = () => {
         // Implement logout functionality here
+        router.post("/logout");
         console.log("Logout function called");
     };
     const { customSonner } = useSonner();
@@ -27,7 +28,7 @@ export default function Authenticated({
             customSonner({ type: "error", text: flash.error });
         }
     }, [flash]);
-
+    
     return (
         <div className="min-h-screen ">
             <div className="min-h-screen dark:black flex">

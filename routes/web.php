@@ -52,6 +52,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/{product}/edit', [ProductController::class, 'edit'])->name('edit');
             Route::put('/{product}', [ProductController::class, 'update'])->name('update');
             Route::delete('/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
+            Route::get('/{product}/toggle-publish', [ProductController::class, 'togglePublish'])->name('toggle.publish');
         });
 
         Route::get('/media-library',[MediaLibraryController::class, 'index'])->name('media.library');

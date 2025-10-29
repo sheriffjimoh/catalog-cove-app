@@ -24,20 +24,6 @@ export default function CreateBusiness(): JSX.Element {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50">
-      {/* Header */}
-      {/* <header className="bg-white shadow-sm border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center">
-              <Building2 className="text-white" size={20} />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold text-gray-900">Catalog Cove</h1>
-              <p className="text-sm text-gray-500">Business Management Platform</p>
-            </div>
-          </div>
-        </div>
-      </header> */}
 
       {/* Main Content */}
       <main className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">

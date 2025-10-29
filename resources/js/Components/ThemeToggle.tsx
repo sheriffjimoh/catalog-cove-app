@@ -1,6 +1,6 @@
 import React from 'react';
 import { Sun, Moon } from 'lucide-react';
-import { useTheme } from '@/Contexts/ThemeContext';
+import { useTheme } from 'next-themes';
 
 interface ThemeToggleProps {
   inDropdown?: boolean;
@@ -17,6 +17,9 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({ inDropdown = false, cl
   const label = isDark ? 'Light' : 'Dark';
 
   const handleToggle = () => {
+    // alert('Theme switching is currently disabled.');
+    console.log(`Switching to ${targetTheme} mode`);
+    console.log(`Current resolved theme: ${resolvedTheme}`);
     setTheme(targetTheme);
     if (inDropdown && closeDropdown) {
       closeDropdown();

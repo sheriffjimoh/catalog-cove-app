@@ -18,6 +18,7 @@ class Product extends Model
         'image',
         'slug',
         'stock',
+        'is_published',
     ];
 
     public static function boot()

@@ -45,11 +45,14 @@ class BusinessController extends Controller
     public function show($slug)
     {
         $business = Business::where('slug', $slug)
-            ->with('products') // eager load products
-            ->firstOrFail();
+        ->with(['products' => function($query) {
+            $query->where('is_published', true)
+                  ->with('images');
+        }])
+        ->firstOrFail();
 
-        return Inertia::render('Business/View', [
-            'business' => $business,
-        ]);
+    return Inertia::render('Business/View', [
+        'business' => $business,
+    ]);
     }
 }

@@ -1,8 +1,8 @@
 import Dropdown from "@/Components/Dropdown";
-import { ChevronDown, Edit, Eye, Trash2 } from "lucide-react";
+import { ChevronDown, Edit, Eye, Trash2, BookOpenCheck } from "lucide-react";
 
 interface Props {
-    row: { id: number };
+    row: { id: number, is_published: boolean };
     handleDelete: (id: number) => void;
 }
 export default function ActionDropDown({ row, handleDelete }: Props) {
@@ -37,6 +37,15 @@ export default function ActionDropDown({ row, handleDelete }: Props) {
                         <div className="flex items-center gap-2">
                             <Eye size={16} />
                             View
+                        </div>
+                    </Dropdown.Link>
+                    <Dropdown.Link
+                        href={`/products/${row.id}/toggle-publish`}
+                        className="text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700"
+                    >
+                        <div className="flex items-center gap-2">
+                            <BookOpenCheck size={16} />
+                            { row.is_published ? 'Unpublish' : 'Publish' }
                         </div>
                     </Dropdown.Link>
 

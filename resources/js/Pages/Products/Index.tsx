@@ -12,6 +12,7 @@ interface Product {
   price?: string;
   stock?: number;
   created_at: string;
+  is_published: boolean;
 }
 
 interface Props {
@@ -53,6 +54,13 @@ export default function Index({ products, filters }: Props) {
         columns={[
           { key: "name", label: "Name" },
           { key: "price", label: "Price" },
+          { key: "is_published", label: "Published",
+            render: (row) => (
+              <span className={row.is_published ? 'text-green-600 font-semibold' : 'text-red-600 font-semibold'}>
+                {row.is_published ? 'Yes' : 'No'}
+              </span>
+            ),
+          },
           { key: "stock", label: "Stock" },
           {
             key: "created_at",
