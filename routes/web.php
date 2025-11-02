@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\AISuggestionController;
 use App\Http\Controllers\MediaLibraryController;
+use App\Http\Controllers\AnalyticsTrackingController;
 
 
 Route::get('/', function () {
@@ -63,6 +64,11 @@ Route::middleware('auth')->group(function () {
         //store routes
         Route::get('/store/{slug}', [BusinessController::class, 'show'])->name('business.show');
         Route::get('/store/{slug}/{product}', [ProductController::class, 'show'])->name('show');
+
+        // Route::get('/analytics',[])->name('analytics');
+        Route::post('/api/analytics/track', [AnalyticsTrackingController::class, 'track'])->name('analytics.track');
+        Route::get('/analytics', [AnalyticsTrackingController::class, 'index'])->name('vendor.analytics');
+
 
 
     Route::post('/ai/suggestion', [AISuggestionController::class, 'suggest'])->name('ai.suggestion');

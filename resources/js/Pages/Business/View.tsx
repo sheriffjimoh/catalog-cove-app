@@ -8,6 +8,9 @@ import StorePageHeader from '@/Components/StorePageHeader';
 import StorePageFooter from '@/Components/StorePageFooter';
 import type { vendor, product } from '@/Types';
 import { handleShare, openWhatsApp } from '@/Lib/utils';
+import { useAnalytics, usePageViewTracking } from '@/Hooks/useAnalytics';
+import { Head } from '@inertiajs/react';
+
 
 
 const StoreListingPage = ({ business }: any) => {
@@ -19,6 +22,9 @@ const StoreListingPage = ({ business }: any) => {
     const [likedProducts, setLikedProducts] = useState(new Set<number>());
     const [searchQuery, setSearchQuery] = useState('');
     const [sortBy, setSortBy] = useState('featured');
+    usePageViewTracking(business.id, 'store_visited');
+    const { trackEvent } = useAnalytics();
+
 
     useEffect(() => {
         setTimeout(() => {
@@ -54,17 +60,17 @@ const StoreListingPage = ({ business }: any) => {
     }, [searchQuery, sortBy, products]);
 
  
-    const toggleLike = (productId: number) => {
-        setLikedProducts(prev => {
-            const newSet = new Set(prev);
-            if (newSet.has(productId)) {
-                newSet.delete(productId);
-            } else {
-                newSet.add(productId);
-            }
-            return newSet;
-        });
-    };
+    // const toggleLike = (productId: number) => {
+    //     setLikedProducts(prev => {
+    //         const newSet = new Set(prev);
+    //         if (newSet.has(productId)) {
+    //             newSet.delete(productId);
+    //         } else {
+    //             newSet.add(productId);
+    //         }
+    //         return newSet;
+    //     });
+    // };
 
     const viewProduct = (product: product) => {
         // Navigate to product page - adjust this based on your routing
@@ -87,6 +93,8 @@ const StoreListingPage = ({ business }: any) => {
     }
 
     return (
+      <>
+      <Head title={`${vendor?.name} - Front Store `} />
         <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50">
             <div className={`transition-opacity duration-1000 ${fadeIn ? 'opacity-100' : 'opacity-0'}`}>
                 
@@ -249,7 +257,13 @@ const StoreListingPage = ({ business }: any) => {
                                                 className="hover:bg-purple-50"
                                                 onClick={(e) => {
                                                     e.stopPropagation();
-                                                    handleShare(product);
+                                                    trackEvent({
+                                                      businessId: business.id,
+                                                      eventType: 'product_shared',
+                                                      productId: product.id,
+                                                  });
+                                              
+                                                    handleShare( product);
                                                 }}
                                             >
                                                 <Share2 className="w-4 h-4 text-slate-600" />
@@ -280,7 +294,17 @@ const StoreListingPage = ({ business }: any) => {
                     <div className="relative group">
                         <div className="absolute inset-0 bg-gradient-to-r from-green-500 to-green-600 rounded-full blur-xl opacity-50 group-hover:opacity-75 transition-opacity animate-pulse"></div>
                         <Button 
-                            onClick={() => openWhatsApp(vendor!, null!)}
+                            onClick={() => {
+                              if (vendor?.whatsapp ) {
+                                // Track inquiry
+                                trackEvent({
+                                    businessId: business.id,
+                                    eventType: 'inquiry_sent',
+                                });
+                              }
+                        
+                              openWhatsApp(vendor!, null!)
+                            }}
                             size="lg"
                             className="relative rounded-full shadow-2xl bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 w-16 h-16 p-0 hover:scale-110 transition-all duration-300"
                             title="Chat on WhatsApp"
@@ -309,6 +333,7 @@ const StoreListingPage = ({ business }: any) => {
                 }
             `}</style>
         </div>
+        </>
     );
 };
 

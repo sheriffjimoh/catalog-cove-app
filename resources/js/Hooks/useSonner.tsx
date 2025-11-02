@@ -1,4 +1,4 @@
-import { cn } from '@/Lib/util'
+import { cn } from '@/Lib/utils'
 import { AlertTriangle, Check, Info, X } from 'lucide-react'
 
 import { toast } from 'sonner'

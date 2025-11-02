@@ -2,6 +2,7 @@ import { product, vendor } from "@/Types";
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
@@ -14,6 +15,8 @@ export const openMaps = (vendor: vendor) => {
 };
 
 export const openWhatsApp = (vendor: vendor, product: product) => {
+
+  
   if (vendor?.whatsapp) {
       const message = `Hi, I'm interested in ${product?.name} - ${product?.price}`;
       window.open(`https://wa.me/${vendor.whatsapp}?text=${encodeURIComponent(message)}`, '_blank');

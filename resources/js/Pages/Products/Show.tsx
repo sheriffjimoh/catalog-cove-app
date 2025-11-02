@@ -19,6 +19,10 @@ import StorePageHeader from "@/Components/StorePageHeader";
 import StorePageFooter from "@/Components/StorePageFooter";
 import type { vendor, product } from "@/Types";
 import { openWhatsApp, handleShare } from "@/Lib/utils";
+import { useAnalytics, usePageViewTracking } from '@/Hooks/useAnalytics';
+import { Head } from "@inertiajs/react";
+
+
 
 const ProductDetailsPage = ({ business, product: initialProduct }: any) => {
     const [vendor, setVendor] = useState<vendor | null>(null);
@@ -28,6 +32,9 @@ const ProductDetailsPage = ({ business, product: initialProduct }: any) => {
     const [fadeIn, setFadeIn] = useState(false);
     const [isLiked, setIsLiked] = useState(false);
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
+    usePageViewTracking(business.id, 'product_viewed', initialProduct?.id);
+    const { trackEvent } = useAnalytics();
 
     useEffect(() => {
         setTimeout(() => {
@@ -77,6 +84,8 @@ const ProductDetailsPage = ({ business, product: initialProduct }: any) => {
     }
 
     return (
+        <>
+        <Head title={`${product?.name} - ${vendor?.name}`} />
         <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50">
             <div
                 className={`transition-opacity duration-1000 ${
@@ -317,9 +326,16 @@ const ProductDetailsPage = ({ business, product: initialProduct }: any) => {
                             {/* Action Buttons */}
                             <div className="space-y-3 pt-4">
                                 <Button
-                                    onClick={() =>
+                                    onClick={() =>{
+
+                                        trackEvent({
+                                            businessId: business.id,
+                                            eventType: 'inquiry_sent',
+                                            productId: product?.id,
+                                        });
+
                                         openWhatsApp(vendor!, product!)
-                                    }
+                                    }}
                                     size="lg"
                                     className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 shadow-lg hover:shadow-xl transition-all text-lg py-6"
                                 >
@@ -329,7 +345,15 @@ const ProductDetailsPage = ({ business, product: initialProduct }: any) => {
 
                                 <div className="grid grid-cols-2 gap-3">
                                     <Button
-                                        onClick={() => handleShare(product!)}
+                                        onClick={() => {
+                                            trackEvent({
+                                                businessId: business.id,
+                                                eventType: 'product_shared',
+                                                productId: product?.id,
+                                            });
+                                        
+                                            handleShare(product!)
+                                        }}
                                         variant="outline"
                                         size="lg"
                                         className="hover:bg-purple-50 hover:border-purple-300"
@@ -390,6 +414,7 @@ const ProductDetailsPage = ({ business, product: initialProduct }: any) => {
 
             <StorePageFooter vendor={vendor} />
         </div>
+        </>
     );
 };
 
