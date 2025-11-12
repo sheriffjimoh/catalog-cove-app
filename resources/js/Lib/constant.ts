@@ -36,7 +36,7 @@ export const navigationItems: NavigationItem[] = [
     {
       name: 'Settings',
       icon: Settings,
-      href: '/settings',
+      href: '/settings/business-information',
       roles: ['business', 'admin']
     }
   ];

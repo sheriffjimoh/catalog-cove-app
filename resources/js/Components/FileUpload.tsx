@@ -7,6 +7,7 @@ interface FileUploadProps {
   error?: string;
   required?: boolean;
   value?: File | null;
+  preview?: string;
 }
 
 export const FileUpload: React.FC<FileUploadProps> = ({
@@ -14,15 +15,28 @@ export const FileUpload: React.FC<FileUploadProps> = ({
   onChange,
   error,
   required = false,
-  value
+  value,
+  preview,
 }) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(value || null);
   const [dragActive, setDragActive] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(preview || null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  console.log({
+    preview
+  })
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
     setSelectedFile(file);
+    
+    // Generate preview URL for the selected file
+    if (file) {
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
+    }
+    
     onChange(e);
   };
 
@@ -35,6 +49,10 @@ export const FileUpload: React.FC<FileUploadProps> = ({
     if (files && files[0]) {
       const file = files[0];
       setSelectedFile(file);
+      
+      // Generate preview URL
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
       
       // Create a synthetic event for onChange
       const syntheticEvent = {
@@ -60,6 +78,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
 
   const removeFile = () => {
     setSelectedFile(null);
+    setPreviewUrl(null);
     if (inputRef.current) {
       inputRef.current.value = '';
     }
@@ -83,6 +102,10 @@ export const FileUpload: React.FC<FileUploadProps> = ({
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
+  console.log({
+    previewUrl
+  })
+
   return (
     <div className="space-y-2">
       <label className="block text-sm font-semibold text-gray-800">
@@ -102,7 +125,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
           className={`w-full border-2 border-dashed rounded-xl p-6 text-center transition-all duration-200
             ${dragActive 
               ? 'border-purple-500 bg-purple-100' 
-              : selectedFile 
+              : selectedFile || previewUrl
                 ? 'border-green-400 bg-green-50' 
                 : 'border-gray-300 hover:border-purple-400 hover:bg-purple-50'
             }
@@ -112,35 +135,47 @@ export const FileUpload: React.FC<FileUploadProps> = ({
           onDragOver={handleDrag}
           onDrop={handleDrop}
         >
-          {selectedFile ? (
+          {(selectedFile || previewUrl) ? (
             <div className="space-y-3">
-            
-              <div className="bg-white rounded-lg p-3 border border-green-200">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <File className="text-green-500" size={20} />
-                    <div className="text-left">
-                      <p className="text-sm font-medium text-gray-900 truncate max-w-xs">
-                        {selectedFile.name}
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        {formatFileSize(selectedFile.size)}
-                      </p>
-                    </div>
-                  </div>
-                  
-                  <button
-                    type="button"
-                    onClick={removeFile}
-                    className="p-1 hover:bg-red-100 rounded-full transition-colors"
-                  >
-                    <X className="text-red-500" size={16} />
-                  </button>
+              {/* Image Preview */}
+              {previewUrl && (
+                <div className="relative mx-auto w-32 h-32 rounded-lg overflow-hidden border-2 border-green-200">
+                  <img 
+                    src={previewUrl} 
+                    alt="Preview" 
+                    className="w-full h-full object-cover"
+                  />
                 </div>
-              </div>
+              )}
+              
+              {selectedFile && (
+                <div className="bg-white rounded-lg p-3 border border-green-200">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <Check className="text-green-500" size={20} />
+                      <div className="text-left">
+                        <p className="text-sm font-medium text-gray-900 truncate max-w-xs">
+                          {selectedFile.name}
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          {formatFileSize(selectedFile.size)}
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <button
+                      type="button"
+                      onClick={removeFile}
+                      className="p-1 hover:bg-red-100 rounded-full transition-colors"
+                    >
+                      <X className="text-red-500" size={16} />
+                    </button>
+                  </div>
+                </div>
+              )}
               
               <p className="text-sm text-green-600">
-                File ready to upload. Click to change.
+                {selectedFile ? 'File ready to upload. Click to change.' : 'Click to change image.'}
               </p>
             </div>
           ) : (

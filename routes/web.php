@@ -69,7 +69,9 @@ Route::middleware('auth')->group(function () {
         Route::post('/api/analytics/track', [AnalyticsTrackingController::class, 'track'])->name('analytics.track');
         Route::get('/analytics', [AnalyticsTrackingController::class, 'index'])->name('vendor.analytics');
 
-
+     Route::get('/settings/business-information', [BusinessController::class, 'edit'])->name('settings');
+     // update business info
+     Route::post('/business/update/{id}', [BusinessController::class, 'update'])->name('business.update');
 
     Route::post('/ai/suggestion', [AISuggestionController::class, 'suggest'])->name('ai.suggestion');
 

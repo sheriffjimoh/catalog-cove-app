@@ -66,3 +66,30 @@
     @apply bg-background text-foreground;
   }
 }
+
+
+.nav-active {
+  fill: var(--primary-color) !important;
+  color: var(--primary-color) !important;
+}
+.dark .nav-active,
+.dark .nav-active .path-1 {
+  fill: var(--primary-color) !important;
+  color: var(--primary-color) !important;
+}
+
+.dark .nav-active .path-2 {
+  fill: var(--primary-color);
+  color: var(--primary-color) !important;
+}
+
+.nav-active,
+.nav-active .path-1 {
+  fill: var(--primary-color) !important;
+  color: var(--primary-color) !important;
+}
+
+.nav-active .path-2 {
+  fill: white !important;
+  color: var(--primary-color) !important;
+}

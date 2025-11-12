@@ -9,12 +9,10 @@ class Business extends Model
 {
     protected $fillable = [
         'user_id', 'name', 'whatsapp', 'email',
-        'logo', 'address', 'short_note'
+        'logo', 'address', 'short_note', 'country_id'
     ];
 
   
-
-
     public function owner() {
         return $this->belongsTo(User::class, 'user_id');
     }
@@ -28,5 +26,10 @@ class Business extends Model
         $slug = Str::slug($name);
         $count = static::where('slug', 'LIKE', "{$slug}%")->count();
         return $count > 0 ? "{$slug}-{$count}" : $slug;
+    }
+
+    public function country()
+    {
+        return $this->belongsTo(Country::class);
     }
 }
