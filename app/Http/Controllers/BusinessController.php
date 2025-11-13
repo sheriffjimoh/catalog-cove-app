@@ -8,13 +8,16 @@ use App\Http\Requests\StoreBusinessRequest;
 use App\Services\CloudinaryService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use App\Models\Country;
 
 
 class BusinessController extends Controller
 {
     public function create()
     {
-        return Inertia::render('Business/Create');
+        return Inertia::render('Business/Create', [
+            'countries' => Country::active()->orderBy('name')->get(['id', 'name', 'code', 'dial_code', 'flag_emoji']),
+        ]);
     }
 
     public function store(StoreBusinessRequest $request, CloudinaryService $cloudinary)
@@ -64,6 +67,8 @@ class BusinessController extends Controller
         $business = auth()->guard()->user()->business;
         return Inertia::render('Settings/Business', [
             'business' => $business,
+            'countries' => Country::active()->orderBy('name')->get(['id', 'name', 'code', 'dial_code', 'flag_emoji']),
+      
         ]);
     }
 
@@ -80,6 +85,7 @@ class BusinessController extends Controller
                 'address' => 'nullable|string|max:500',
                 'short_note' => 'nullable|string|max:1000',
                 'logo' => 'nullable|image|max:2048',
+                'country_id' => 'required|exists:countries,id',
             ]);
 
             if ($request->hasFile('logo')) {
@@ -90,9 +96,9 @@ class BusinessController extends Controller
                     $uploadedFile,
                     'cataladove/business/logos'
                 );
+            }else {
+                unset($validated['logo']);
             }
-
-            // dd($validated);
 
             $business->update($validated);
 

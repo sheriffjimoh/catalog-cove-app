@@ -13,7 +13,7 @@ export default function SettingsPagesLayout({
             <main className="w-full xl:px-[48px] px-3 pb-6 xl:pb-[48px] sm:pt-[15px] ">
                 <div className="grid grid-cols-1 xl:grid-cols-12 dark:bg-gray-800 bg-slate-50 rounded-lg shadow ">
                     <SettingsSidebar />
-                    <div className="py-8 px-10 col-span-9 tab-content">
+                    <div className="py-8 md:px-10 px-2  col-span-9 tab-content">
                     <Outlet />
                     {children}
                     </div>

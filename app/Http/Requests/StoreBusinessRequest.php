@@ -21,7 +21,8 @@ class StoreBusinessRequest extends FormRequest
             'email' => 'required|email|unique:businesses,email',
             'address' => 'nullable|string|max:255',
             'short_note' => 'nullable|string|max:1000',
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'country_id' => 'required|exists:countries,id',
         ];
     }
 

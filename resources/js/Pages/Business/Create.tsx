@@ -5,9 +5,10 @@ import { FormInput } from "@/Components/TextInput"
 import { FormTextarea } from "@/Components/TextAreaInput"
 import { FileUpload } from "@/Components/FileUpload"
 import { Button } from "@/Components/Button"
+import { SelectInput } from "@/Components/SelectInput"
 
 
-export default function CreateBusiness(): JSX.Element {
+export default function CreateBusiness({ countries }: { countries: any}): JSX.Element {
   const { data, setData, post, processing, errors } = useForm({
     name: "",
     whatsapp: "",
@@ -15,6 +16,7 @@ export default function CreateBusiness(): JSX.Element {
     address: "",
     short_note: "",
     logo: null as File | null,
+    country_id: '',
   })
 
   const submit = (e: React.FormEvent) => {
@@ -58,6 +60,20 @@ export default function CreateBusiness(): JSX.Element {
                 placeholder="Enter your business name"
                 required
               />
+
+                <SelectInput 
+                              label="Country"
+                              value={data.country_id}
+                              onChange={(e: { target: { value: string } }) => setData('country_id', e.target.value)}
+                              options={countries.map((country: any) => ({
+                                  value: country.id,
+                                  label: `${country.flag_emoji} ${country.name} (${country.dial_code})`
+                              }))}
+                              placeholder="Select your country"
+                              error={errors.country_id}
+                              required
+                     />
+              
 
               <FormInput
                 label="WhatsApp Number"
