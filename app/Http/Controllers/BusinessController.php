@@ -90,8 +90,6 @@ class BusinessController extends Controller
 
             if ($request->hasFile('logo')) {
                 $uploadedFile = $request->file('logo')->getRealPath();
-
-                // Upload with CloudinaryService
                 $validated['logo'] = $cloudinary->uploadImage(
                     $uploadedFile,
                     'cataladove/business/logos'
