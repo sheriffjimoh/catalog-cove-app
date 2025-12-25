@@ -16,7 +16,17 @@ export default function BusinessSettings({
     countries: any;
 }) {
   
-    console.log("Business Data:", business);
+  
+document.addEventListener("DOMContentLoaded", function () {
+const btnID = document.getElementById("business-settings-btn");
+
+    document.addEventListener('click', function (event) {
+        if (btnID && btnID.contains(event.target as Node)) {
+            event.preventDefault();
+        }
+    } );
+});
+
     const { data, setData, post, processing, errors } = useForm({
         name: business?.name || "",
         whatsapp: business?.whatsapp || "",

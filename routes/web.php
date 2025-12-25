@@ -10,6 +10,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\AISuggestionController;
 use App\Http\Controllers\MediaLibraryController;
 use App\Http\Controllers\AnalyticsTrackingController;
+use App\Http\Controllers\SubscriptionController;
 
 
 Route::get('/', function () {
@@ -69,11 +70,16 @@ Route::middleware('auth')->group(function () {
         Route::post('/api/analytics/track', [AnalyticsTrackingController::class, 'track'])->name('analytics.track');
         Route::get('/analytics', [AnalyticsTrackingController::class, 'index'])->name('vendor.analytics');
 
-     Route::get('/settings/business-information', [BusinessController::class, 'edit'])->name('settings');
-     // update business info
-     Route::post('/business/update/{id}', [BusinessController::class, 'update'])->name('business.update');
+        Route::get('/settings/business-information', [BusinessController::class, 'edit'])->name('settings');
+       // update business info
+        Route::post('/business/update/{id}', [BusinessController::class, 'update'])->name('business.update');
 
-    Route::post('/ai/suggestion', [AISuggestionController::class, 'suggest'])->name('ai.suggestion');
+        Route::post('/ai/suggestion', [AISuggestionController::class, 'suggest'])->name('ai.suggestion');
+
+
+        Route::get('/select-plan', [SubscriptionController::class, 'showPlans'])->name('plans.select');
+        Route::post('/select-plan', [SubscriptionController::class, 'selectPlan'])->name('plans.select.submit');
+    
 
     });
 });

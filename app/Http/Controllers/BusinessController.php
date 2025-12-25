@@ -38,7 +38,7 @@ class BusinessController extends Controller
             $validated['user_id'] = $request->user()->id;
             Business::create($validated);
 
-            return redirect()->route('dashboard')->with('success', 'Business created successfully!');
+            return redirect()->route('plans.select');
         } catch (\Exception $e) {
             Log::error('Business creation failed: ' . $e->getMessage());
             return redirect()->back()->withInput();
