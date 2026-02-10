@@ -60,6 +60,9 @@ class PlanSeeder extends Seeder
             'currency' => 'NGN',
             'monthly_price' => 5000,
             'yearly_price' => 50000,
+            'paystack_plan_code' => 'PLN_otvkpipxlvv32pk',
+            'paystack_monthly_plan_code' => 'PLN_otvkpipxlvv32pk',
+            'paystack_yearly_plan_code' => 'PLN_ct5zchnjoaw8orb',
         ]);
 
         PlanPricing::create([
@@ -67,20 +70,30 @@ class PlanSeeder extends Seeder
             'currency' => 'USD',
             'monthly_price' => 10,
             'yearly_price' => 100,
+            'stripe_price_id' => 'price_1Sud3JHTPc2IsTFQkerdeK0N',
+            'stripe_monthly_price_id' => 'price_1Sud3JHTPc2IsTFQkerdeK0N',
+            'stripe_yearly_price_id' => 'price_1Sud4FHTPc2IsTFQV4HnaOs9',
         ]);
 
         PlanPricing::create([
             'plan_id' => $starterPlan->id,
             'currency' => 'GHS',
             'monthly_price' => 150,
-            'yearly_price' => 1500,
+            'yearly_price' => 1500,   
+            'paystack_plan_code' => 'PLN_otvkpipxlvv32pk',
+            'paystack_monthly_plan_code' => 'PLN_otvkpipxlvv32pk',
+            'paystack_yearly_plan_code' => 'PLN_ct5zchnjoaw8orb',
         ]);
 
         PlanPricing::create([
             'plan_id' => $starterPlan->id,
             'currency' => 'KES',
             'monthly_price' => 1300,
-            'yearly_price' => 13000,
+            'yearly_price' => 13000, 
+            'paystack_plan_code' => 'PLN_otvkpipxlvv32pk',
+            'paystack_monthly_plan_code' => 'PLN_otvkpipxlvv32pk',
+            'paystack_yearly_plan_code' => 'PLN_ct5zchnjoaw8orb',
+
         ]);
 
         // Pro Plan
@@ -107,6 +120,9 @@ class PlanSeeder extends Seeder
             'currency' => 'NGN',
             'monthly_price' => 15000,
             'yearly_price' => 150000,
+            'paystack_plan_code' => 'PLN_voh2um86gv1y5ir',
+            'paystack_monthly_plan_code' => 'PLN_voh2um86gv1y5ir',
+            'paystack_yearly_plan_code' => 'PLN_wrujvjsk0994f78',
         ]);
 
         PlanPricing::create([
@@ -114,6 +130,9 @@ class PlanSeeder extends Seeder
             'currency' => 'USD',
             'monthly_price' => 29,
             'yearly_price' => 290,
+            'stripe_price_id' => 'price_1SudFKHTPc2IsTFQCHJ3HbMw',
+            'stripe_monthly_price_id' => 'price_1SudFKHTPc2IsTFQCHJ3HbMw',
+            'stripe_yearly_price_id' => 'price_1SvZgGHTPc2IsTFQI6lP2t5q',
         ]);
 
         PlanPricing::create([
@@ -121,6 +140,9 @@ class PlanSeeder extends Seeder
             'currency' => 'GHS',
             'monthly_price' => 450,
             'yearly_price' => 4500,
+            'paystack_plan_code' => 'PLN_voh2um86gv1y5ir',
+            'paystack_monthly_plan_code' => 'PLN_voh2um86gv1y5ir',
+            'paystack_yearly_plan_code' => 'PLN_wrujvjsk0994f78',
         ]);
 
         PlanPricing::create([
@@ -128,6 +150,9 @@ class PlanSeeder extends Seeder
             'currency' => 'KES',
             'monthly_price' => 3800,
             'yearly_price' => 38000,
+            'paystack_plan_code' => 'PLN_voh2um86gv1y5ir',
+            'paystack_monthly_plan_code' => 'PLN_voh2um86gv1y5ir',
+            'paystack_yearly_plan_code' => 'PLN_wrujvjsk0994f78',
         ]);
     }
 }

@@ -11,6 +11,8 @@ use App\Http\Controllers\AISuggestionController;
 use App\Http\Controllers\MediaLibraryController;
 use App\Http\Controllers\AnalyticsTrackingController;
 use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\PaymentController;
+
 
 
 Route::get('/', function () {
@@ -77,12 +79,24 @@ Route::middleware('auth')->group(function () {
         Route::post('/ai/suggestion', [AISuggestionController::class, 'suggest'])->name('ai.suggestion');
 
 
-        Route::get('/select-plan', [SubscriptionController::class, 'showPlans'])->name('plans.select');
-        Route::post('/select-plan', [SubscriptionController::class, 'selectPlan'])->name('plans.select.submit');
+       
     
 
     });
+
+
+
+    Route::get('/select-plan', [SubscriptionController::class, 'showPlans'])->name('plans.select');
+    Route::post('/select-plan', [SubscriptionController::class, 'selectPlan'])->name('plans.select.submit');
+    Route::get('/checkout', [SubscriptionController::class, 'checkout'])->name('checkout');
+
 });
 
 
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/api/stripe/checkout', [PaymentController::class, 'stripeCheckout']);
+    Route::post('/api/paystack/checkout', [PaymentController::class, 'paystackCheckout']);
+});
+
 require __DIR__.'/auth.php';
+// require __DIR__.'/api.php';

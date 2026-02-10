@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
 
 class Business extends Model
 {
@@ -31,5 +33,21 @@ class Business extends Model
     public function country()
     {
         return $this->belongsTo(Country::class);
+    }
+
+    public function subscriptions(): HasMany
+    {
+        return $this->hasMany(\App\Models\Subscription::class);
+    }
+
+    public function activeSubscription()
+    {
+        return $this->subscriptions()
+            ->where('status', 'active')
+            ->where(function ($query) {
+                $query->whereNull('current_period_end')
+                      ->orWhere('current_period_end', '>', now());
+            })
+            ->first();
     }
 }

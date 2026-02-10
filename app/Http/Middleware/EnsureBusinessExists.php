@@ -13,10 +13,20 @@ class EnsureBusinessExists
     public function handle(Request $request, Closure $next): Response
     {
 
-
-        if (!$request->user()->business) {
+       
+       $business = $request->user()->business;
+        if (!$business) {
             return redirect()->route('business.create');
         }
+
+        if ($request->routeIs('plans.select') || $request->routeIs('business.create')) {
+            return $next($request);
+        }
+
+        if ($request->user() && !$business->activeSubscription()) {
+            return redirect()->route('plans.select');
+        }
+
         return $next($request);
     }
 }

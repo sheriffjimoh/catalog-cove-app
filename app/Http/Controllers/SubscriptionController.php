@@ -8,6 +8,7 @@ use App\Models\Subscription;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
+use App\Models\Business;
 
 class SubscriptionController extends Controller
 {
@@ -19,8 +20,11 @@ class SubscriptionController extends Controller
     
     public function showPlans()
     {
-        // Fetch only active plans
-        $plans = Plan::where('is_active', true)->with('pricing')->orderBy('sort_order')->get();
+       
+        $currency = $this->getUserCurrency();
+        $plans = Plan::where('is_active', true) ->with(['pricing' => function ($query) use ($currency) {
+            $query->where('currency', $currency);
+        }])->orderBy('sort_order')->get();
         return Inertia::render('Subscriptions/SelectPlan', [
             'plans' => $plans,
         ]);
@@ -61,18 +65,50 @@ class SubscriptionController extends Controller
 
             return redirect()->route('dashboard')->with('success', 'Free plan activated!');
         }
-
         // Paid plan → redirect to payment checkout
         return redirect()->route('checkout', [
-            'plan_id' => $plan->id,
+            'plan_id' => $plan,
+            'pricing' => $pricing,
             'interval' => $request->interval,
             'currency' => $currency
         ]);
     }
 
+    public function checkout(Request $request)
+    {
+        $request->validate([
+            'plan_id' => 'required|exists:plans,id',
+            'interval' => 'required|in:monthly,yearly',
+            'currency' => 'required|string',
+        ]);
+    
+    
+    
+        $plan = Plan::with('pricing')->findOrFail($request->plan_id);
+        $pricing = $plan->pricing()->where('currency', $request->currency)->first();
+        if (!$pricing) {
+            return redirect()->back()->withErrors(['plan_id' => 'Pricing not available for your region']);
+        }
+    
+        // Detect provider based on currency
+        $provider = match($request->currency) {
+            'NGN','GHS','KES' => 'paystack',
+            default => 'stripe',
+        };
+        
+      return  Inertia::render('Subscriptions/Checkout', [
+            'plan' => $plan,
+            'pricing' => $pricing,
+            'interval' => $request->interval,
+            'currency' => $request->currency,
+            'provider' => $provider,
+        ]);
+    }
+
     protected function getUserCurrency()
     {
-        $country = $this->user->business->country_code ?? 'US';
+        $business = Business::with('country')->find($this->user->business->id);
+        $country = $business->country->code;
 
         return match($country) {
             'NG' => 'NGN',
@@ -84,4 +120,6 @@ class SubscriptionController extends Controller
             default => 'USD',
         };
     }
+
+  
 }

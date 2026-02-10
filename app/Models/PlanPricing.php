@@ -16,6 +16,11 @@ class PlanPricing extends Model
         'yearly_price',
         'stripe_price_id',
         'paystack_plan_code',
+        'stripe_monthly_price_id',
+        'stripe_yearly_price_id',
+        'paystack_plan_code', 
+        'paystack_monthly_plan_code',
+        'paystack_yearly_plan_code',
     ];
 
     protected $casts = [
