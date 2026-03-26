@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Services;
 
 use Stripe\StripeClient;
@@ -18,12 +17,10 @@ class PaymentService
     }
 
     public function createStripeCheckoutSession(
-      Business $business,
-    PlanPricing $pricing,
-    string $interval)
+        Business $business,
+        PlanPricing $pricing,
+        string $interval)
     {
-        $priceId = $pricing->stripe_price_id;
-
         $session = Session::create([
             'mode' => 'subscription',
             'payment_method_types' => ['card'],
@@ -38,8 +35,9 @@ class PaymentService
                 'business_id' => $business->id,
                 'plan_id' => $pricing->plan_id,
                 'interval' => $interval,
+                'currency' => $pricing->currency,
             ],
-            'success_url' => route('billing.success'),
+            'success_url' => route('stripe.callback') . '?session_id={CHECKOUT_SESSION_ID}',
             'cancel_url' => route('billing.cancel'),
         ]);
 
@@ -48,18 +46,25 @@ class PaymentService
 
     public function createPaystackTransaction($plan, $pricing, $interval, $currency, $user)
     {
-        $amount = ($interval === 'yearly' ? $pricing->yearly_price : $pricing->monthly_price) * 100; // Paystack in kobo
+        $business = $user->business;
+        $amount = ($interval === 'yearly' ? $pricing->yearly_price : $pricing->monthly_price) * 100;
         $reference = 'PSK-' . uniqid();
+
+        $callbackUrl = route('paystack.callback') . '?' . http_build_query([
+            'plan_id' => $plan->id,
+            'interval' => $interval,
+            'business_id' => $business->id,
+            'currency' => $currency,
+        ]);
 
         $payload = [
             'email' => $user->email,
             'amount' => $amount,
             'reference' => $reference,
             'currency' => $currency,
-            'callback_url' => route('payment.success'),
+            'callback_url' => $callbackUrl,
         ];
 
-        // Send request to Paystack API
         $ch = curl_init('https://api.paystack.co/transaction/initialize');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
@@ -72,6 +77,40 @@ class PaymentService
 
         return json_decode($response, true);
     }
-}
 
-?>
+    public function verifyPaystackTransaction(string $reference): ?array
+    {
+        $ch = curl_init('https://api.paystack.co/transaction/verify/' . rawurlencode($reference));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Authorization: Bearer ' . env('PAYSTACK_SECRET'),
+        ]);
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        $data = json_decode($response, true);
+
+        if ($data && $data['status'] === true && $data['data']['status'] === 'success') {
+            return $data['data'];
+        }
+
+        return null;
+    }
+
+    public function verifyStripeSession(string $sessionId): ?object
+    {
+        try {
+            $session = $this->stripe->checkout->sessions->retrieve($sessionId, [
+                'expand' => ['subscription'],
+            ]);
+
+            if ($session->payment_status === 'paid') {
+                return $session;
+            }
+
+            return null;
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+}

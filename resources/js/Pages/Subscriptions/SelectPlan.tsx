@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { Inertia } from '@inertiajs/inertia';
 import { Check, ArrowRight, Gift, Zap, Crown } from 'lucide-react';
-import { Head, useForm } from '@inertiajs/react';
+import { Head, router } from '@inertiajs/react';
 
 interface PlanPricing {
     currency: string;
@@ -26,14 +25,15 @@ interface Props {
 const PlanSelectionPage: React.FC<Props> = ({ plans }) => {
     const [selectedPlan, setSelectedPlan] = useState<number | null>(null);
     const [interval, setInterval] = useState<'monthly' | 'yearly'>('monthly');
-    const form = useForm<{ plan_id: number | null; interval: string }>({ plan_id: null, interval: 'monthly' });
+
 
 
     const handleContinue = () => {
         if (selectedPlan) {
-            form.setData('plan_id', selectedPlan);
-            form.setData('interval', interval);
-            form.post('/select-plan');
+            router.post('/select-plan', {
+                plan_id: selectedPlan,
+                interval: interval,
+            });
         }
     };
 
@@ -93,18 +93,16 @@ const PlanSelectionPage: React.FC<Props> = ({ plans }) => {
                         <button
                             type="button"
                             onClick={() => setInterval('monthly')}
-                            className={`px-6 py-2 rounded-full text-sm font-semibold transition-all ${
-                                interval === 'monthly' ? 'bg-purple-700 text-white shadow-md' : 'text-slate-600 hover:text-purple-700'
-                            }`}
+                            className={`px-6 py-2 rounded-full text-sm font-semibold transition-all ${interval === 'monthly' ? 'bg-purple-700 text-white shadow-md' : 'text-slate-600 hover:text-purple-700'
+                                }`}
                         >
                             Monthly
                         </button>
                         <button
                             type="button"
                             onClick={() => setInterval('yearly')}
-                            className={`px-6 py-2 rounded-full text-sm font-semibold transition-all ${
-                                interval === 'yearly' ? 'bg-purple-700 text-white shadow-md' : 'text-slate-600 hover:text-purple-700'
-                            }`}
+                            className={`px-6 py-2 rounded-full text-sm font-semibold transition-all ${interval === 'yearly' ? 'bg-purple-700 text-white shadow-md' : 'text-slate-600 hover:text-purple-700'
+                                }`}
                         >
                             Yearly
                             <span className="ml-2 text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
@@ -126,9 +124,8 @@ const PlanSelectionPage: React.FC<Props> = ({ plans }) => {
                             <div
                                 key={plan.id}
                                 onClick={() => setSelectedPlan(plan.id)}
-                                className={`relative bg-white rounded-2xl shadow-lg border-2 transition-all duration-300 cursor-pointer hover:shadow-2xl hover:-translate-y-1 ${
-                                    isSelected ? 'border-purple-700 shadow-purple-200' : 'border-gray-200 hover:border-purple-300'
-                                } ${isPro ? 'md:scale-105 z-10' : ''}`}
+                                className={`relative bg-white rounded-2xl shadow-lg border-2 transition-all duration-300 cursor-pointer hover:shadow-2xl hover:-translate-y-1 ${isSelected ? 'border-purple-700 shadow-purple-200' : 'border-gray-200 hover:border-purple-300'
+                                    } ${isPro ? 'md:scale-105 z-10' : ''}`}
                             >
                                 {/* Popular Badge */}
                                 {isPro && (
@@ -196,18 +193,7 @@ const PlanSelectionPage: React.FC<Props> = ({ plans }) => {
                                         ))}
                                     </ul>
 
-                                    {/* Select Button */}
-                                    <button
-                                        type="button"
-                                        onClick={() => setSelectedPlan(plan.id)}
-                                        className={`w-full py-3 px-6 rounded-xl font-semibold transition-all ${
-                                            isSelected
-                                                ? 'bg-purple-700 text-white shadow-lg hover:bg-purple-800'
-                                                : 'bg-white border-2 border-purple-700 text-purple-700 hover:bg-purple-50'
-                                        }`}
-                                    >
-                                        {isSelected ? 'Selected' : 'Select Plan'}
-                                    </button>
+
                                 </div>
                             </div>
                         );

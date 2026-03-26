@@ -12,18 +12,31 @@ class EnsureBusinessExists
 
     public function handle(Request $request, Closure $next): Response
     {
-
-       
-       $business = $request->user()->business;
+        $business = $request->user()->business;
         if (!$business) {
             return redirect()->route('business.create');
         }
 
-        if ($request->routeIs('plans.select') || $request->routeIs('business.create')) {
+        // Allow callback and checkout routes to pass through
+        if ($request->routeIs('paystack.callback') || 
+            $request->routeIs('stripe.callback') || 
+            $request->routeIs('checkout') ||
+            $request->routeIs('payment.success') ||
+            $request->routeIs('billing.cancel') ||
+            $request->routeIs('business.create')) {
             return $next($request);
         }
 
-        if ($request->user() && !$business->activeSubscription()) {
+        // If user has active subscription and tries to access select-plan, redirect to dashboard
+        if ($request->routeIs('plans.select') || $request->routeIs('plans.select.submit')) {
+            if ($business->activeSubscription()) {
+                return redirect()->route('dashboard');
+            }
+            return $next($request);
+        }
+
+        // If no active subscription, redirect to plan selection
+        if (!$business->activeSubscription()) {
             return redirect()->route('plans.select');
         }
 

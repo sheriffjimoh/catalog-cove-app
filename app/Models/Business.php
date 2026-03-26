@@ -11,7 +11,12 @@ class Business extends Model
 {
     protected $fillable = [
         'user_id', 'name', 'whatsapp', 'email',
-        'logo', 'address', 'short_note', 'country_id'
+        'logo', 'address', 'short_note', 'country_id',
+        'has_selected_plan'
+    ];
+
+    protected $casts = [
+        'has_selected_plan' => 'boolean',
     ];
 
   
@@ -38,6 +43,11 @@ class Business extends Model
     public function subscriptions(): HasMany
     {
         return $this->hasMany(\App\Models\Subscription::class);
+    }
+
+    public function usageRecords(): HasMany
+    {
+        return $this->hasMany(\App\Models\UsageRecord::class);
     }
 
     public function activeSubscription()

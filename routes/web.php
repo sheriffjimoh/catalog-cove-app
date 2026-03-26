@@ -20,10 +20,10 @@ Route::get('/', function () {
         return redirect()->route('dashboard');
     }
     return Inertia::render('Auth/Login', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
+    'canLogin' => Route::has('login'),
+    'canRegister' => Route::has('register'),
+    'laravelVersion' => Application::VERSION,
+    'phpVersion' => PHP_VERSION,
     ]);
 });
 
@@ -31,72 +31,83 @@ Route::get('/', function () {
 // Authenticated routes
 Route::middleware('auth')->group(function () {
     // Profile routes
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/profile', [ProfileController::class , 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class , 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class , 'destroy'])->name('profile.destroy');
 
     // Business setup routes (no business.exists check here)
     Route::middleware(['auth', 'no.business'])->group(function () {
-        Route::get('/business/create', [BusinessController::class, 'create'])->name('business.create');
-        Route::post('/business', [BusinessController::class, 'store'])->name('business.store');
-    });
+            Route::get('/business/create', [BusinessController::class , 'create'])->name('business.create');
+            Route::post('/business', [BusinessController::class , 'store'])->name('business.store');
+        }
+        );
 
-    // Routes that require business to exist
-    Route::middleware('business.exists')->group(function () {
-     
-        Route::get('/dashboard', function () {
-            return Inertia::render('Dashboard');
-        })->middleware(['verified'])->name('dashboard');
+        // Routes that require business to exist
+        Route::middleware('business.exists')->group(function () {
 
-        // Product routes
-        Route::group(['prefix' => 'products', 'as' => 'products.'], function () {
-            Route::get('/', [ProductController::class, 'index'])->name('index');
-            Route::get('/create', [ProductController::class, 'create'])->name('create');
-            Route::post('/', [ProductController::class, 'store'])->name('store');
-            Route::get('/{product}/edit', [ProductController::class, 'edit'])->name('edit');
-            Route::put('/{product}', [ProductController::class, 'update'])->name('update');
-            Route::delete('/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
-            Route::get('/{product}/toggle-publish', [ProductController::class, 'togglePublish'])->name('toggle.publish'); 
+            Route::get('/dashboard', function () {
+                    return Inertia::render('Dashboard');
+                }
+                )->middleware(['verified'])->name('dashboard');
+
+                // Product routes
+                Route::group(['prefix' => 'products', 'as' => 'products.'], function () {
+                    Route::get('/', [ProductController::class , 'index'])->name('index');
+                    Route::get('/create', [ProductController::class , 'create'])->name('create');
+                    Route::post('/', [ProductController::class , 'store'])->name('store');
+                    Route::get('/{product}/edit', [ProductController::class , 'edit'])->name('edit');
+                    Route::put('/{product}', [ProductController::class , 'update'])->name('update');
+                    Route::delete('/{product}', [ProductController::class , 'destroy'])->name('products.destroy');
+                    Route::get('/{product}/toggle-publish', [ProductController::class , 'togglePublish'])->name('toggle.publish');
+                }
+                );
+
+                Route::get('/media-library', [MediaLibraryController::class , 'index'])->name('media.library');
+                Route::delete('/image/delete/{id}', [MediaLibraryController::class , 'deleteImage'])->name('image.delete');
+                Route::post('/image/remove-bg', [MediaLibraryController::class , 'removeBackground'])
+                    ->name('image.remove-bg');
+
+
+                // Route::get('/analytics',[])->name('analytics');
+                Route::post('/api/analytics/track', [AnalyticsTrackingController::class , 'track'])->name('analytics.track');
+                Route::get('/analytics', [AnalyticsTrackingController::class , 'index'])->name('vendor.analytics');
+
+                Route::get('/settings/business-information', [BusinessController::class , 'edit'])->name('settings');
+                // update business info
+                Route::post('/business/update/{id}', [BusinessController::class , 'update'])->name('business.update');
+
+                Route::post('/ai/suggestion', [AISuggestionController::class , 'suggest'])->name('ai.suggestion');
+
+
+
+
+
+            }
+            );
+
+            Route::get('/select-plan', [SubscriptionController::class , 'showPlans'])->name('plans.select');
+            Route::post('/select-plan', [SubscriptionController::class , 'selectPlan'])->name('plans.select.submit');
+            Route::get('/checkout', [SubscriptionController::class , 'checkout'])->name('checkout');
+
+            // Payment callback routes (process payment verification + create records)
+            Route::get('/payment/paystack/callback', [PaymentController::class, 'paystackCallback'])->name('paystack.callback');
+            Route::get('/payment/stripe/callback', [PaymentController::class, 'stripeCallback'])->name('stripe.callback');
+
+            // Post-payment pages
+            Route::get('/payment/success', function () {
+                return \Inertia\Inertia::render('Subscriptions/PaymentSuccess');
+            })->name('payment.success');
+
+            Route::get('/billing/cancel', function () {
+                return \Inertia\Inertia::render('Subscriptions/PaymentCancel');
+            })->name('billing.cancel');
+
         });
 
-        Route::get('/media-library',[MediaLibraryController::class, 'index'])->name('media.library');
-        Route::delete('/image/delete/{id}', [MediaLibraryController::class, 'deleteImage'])->name('image.delete');
-        Route::post('/image/remove-bg', [MediaLibraryController::class, 'removeBackground'])
-        ->name('image.remove-bg');
-
-        //store routes
-        Route::get('/store/{slug}', [BusinessController::class, 'show'])->name('business.show');
-        Route::get('/store/{slug}/{product}', [ProductController::class, 'show'])->name('show');
-
-        // Route::get('/analytics',[])->name('analytics');
-        Route::post('/api/analytics/track', [AnalyticsTrackingController::class, 'track'])->name('analytics.track');
-        Route::get('/analytics', [AnalyticsTrackingController::class, 'index'])->name('vendor.analytics');
-
-        Route::get('/settings/business-information', [BusinessController::class, 'edit'])->name('settings');
-       // update business info
-        Route::post('/business/update/{id}', [BusinessController::class, 'update'])->name('business.update');
-
-        Route::post('/ai/suggestion', [AISuggestionController::class, 'suggest'])->name('ai.suggestion');
-
-
-       
-    
-
-    });
+//store routes
+Route::get('/store/{slug}', [BusinessController::class , 'show'])->name('business.show');
+Route::get('/store/{slug}/{product}', [ProductController::class , 'show'])->name('show');
 
 
 
-    Route::get('/select-plan', [SubscriptionController::class, 'showPlans'])->name('plans.select');
-    Route::post('/select-plan', [SubscriptionController::class, 'selectPlan'])->name('plans.select.submit');
-    Route::get('/checkout', [SubscriptionController::class, 'checkout'])->name('checkout');
-
-});
-
-
-Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/api/stripe/checkout', [PaymentController::class, 'stripeCheckout']);
-    Route::post('/api/paystack/checkout', [PaymentController::class, 'paystackCheckout']);
-});
-
-require __DIR__.'/auth.php';
-// require __DIR__.'/api.php';
+require __DIR__ . '/auth.php';

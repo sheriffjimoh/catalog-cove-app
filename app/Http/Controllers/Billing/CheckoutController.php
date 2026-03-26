@@ -26,7 +26,8 @@ class CheckoutController extends Controller
         if ($request->provider === 'stripe') {
             $checkoutUrl = app(StripeSubscriptionService::class)
                 ->createCheckout($business, $pricing, $interval);
-        } else {
+        }
+        else {
             $checkoutUrl = app(PaystackSubscriptionService::class)
                 ->createSubscription($business, $pricing);
         }

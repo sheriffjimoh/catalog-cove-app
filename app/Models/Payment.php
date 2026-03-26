@@ -7,12 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 class Payment extends Model
 {
     protected $fillable = [
+        'business_id',
         'subscription_id',
+        'provider',
+        'provider_payment_id',
+        'status',
         'amount',
         'currency',
-        'payment_method',
-        'status',
-        'transaction_id',
+        'description',
+        'metadata',
         'paid_at',
     ];
 

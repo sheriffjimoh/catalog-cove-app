@@ -30,7 +30,7 @@ const Checkout: React.FC<Props> = ({ plan, pricing, interval, currency, provider
     } else {
         priceId = interval === 'yearly' ? (pricing.paystack_yearly_plan_code || '') : (pricing.paystack_plan_code || '');
     }
-   
+
     let endpoint = '';
     if (provider === 'stripe') {
         endpoint = '/api/stripe/checkout';
@@ -38,12 +38,21 @@ const Checkout: React.FC<Props> = ({ plan, pricing, interval, currency, provider
         endpoint = '/api/paystack/checkout';
     }
     const handlePayment = async () => {
-        // await fetch('/sanctum/csrf-cookie', { credentials: 'include' });
+        await fetch('/sanctum/csrf-cookie', { credentials: 'include' });
+
+        const xsrfToken = document.cookie
+            .split('; ')
+            .find(row => row.startsWith('XSRF-TOKEN='))
+            ?.split('=')[1];
 
         const response = await fetch(endpoint, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include', 
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-XSRF-TOKEN': decodeURIComponent(xsrfToken || ''),
+            },
+            credentials: 'include',
             body: JSON.stringify({
                 plan_id: plan.id,
                 currency: currency,
@@ -52,10 +61,10 @@ const Checkout: React.FC<Props> = ({ plan, pricing, interval, currency, provider
                 interval: interval, // 'monthly' or 'yearly'
             }),
         });
-    
+
         const data = await response.json();
-        if (data.url) {
-            window.location.href = data.url;
+        if (data.authorization_url) {
+            window.location.href = data.authorization_url;
         }
     };
 
