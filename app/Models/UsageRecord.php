@@ -37,7 +37,7 @@ class UsageRecord extends Model
         return $this->used >= $this->limit;
     }
 
-    public function increment(int $amount = 1): void
+    public function incrementUsage(int $amount = 1): void
     {
         $this->used += $amount;
         $this->save();
