@@ -132,10 +132,6 @@ const VendorAnalyticsDashboard = ({
         ])
     );
 
-    console.log("Analytics:", analytics);
-    console.log("Chart Data:", chartData);
-    console.log("Max Value:", maxValue);
-
     return (
         <AuthenticatedLayout>
             <Head title="Analytics Dashboard" />
@@ -144,7 +140,7 @@ const VendorAnalyticsDashboard = ({
                     {/* Header */}
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                         <div>
-                            <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mb-2">
+                            <h1 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-2">
                                 Analytics Dashboard
                             </h1>
                             <p className="text-slate-600">
@@ -166,18 +162,17 @@ const VendorAnalyticsDashboard = ({
                                             : "outline"
                                     }
                                     onClick={() => handleDateRangeChange(days)}
-                                    className={
-                                        selectedRange === days
-                                            ? "bg-purple-700 hover:bg-purple-800"
-                                            : "hover:bg-purple-50"
-                                    }
+                                    className={`bg-white dark:bg-slate-900 ${selectedRange === days
+                                            ? "text-white hover:bg-purple-800"
+                                            : "text-slate-900 dark:text-white hover:bg-purple-50"
+                                        }`}
                                 >
                                     <Calendar className="w-4 h-4 mr-2" />
                                     {days === "7"
                                         ? "Last 7 days"
                                         : days === "30"
-                                        ? "Last 30 days"
-                                        : "Last 90 days"}
+                                            ? "Last 30 days"
+                                            : "Last 90 days"}
                                 </Button>
                             ))}
                         </div>
@@ -186,7 +181,7 @@ const VendorAnalyticsDashboard = ({
                     {/* Overview Cards */}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
                         {/* Store Visits */}
-                        <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow">
+                        <Card className="border-0  bg-white dark:bg-slate-900 shadow-lg hover:shadow-xl transition-shadow">
                             <CardHeader className="pb-3">
                                 <div className="flex items-center justify-between">
                                     <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
@@ -229,7 +224,7 @@ const VendorAnalyticsDashboard = ({
                         </Card>
 
                         {/* Product Views */}
-                        <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow">
+                        <Card className="border-0 bg-white dark:bg-slate-900 shadow-lg hover:shadow-xl transition-shadow">
                             <CardHeader className="pb-3">
                                 <div className="flex items-center justify-between">
                                     <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
@@ -248,7 +243,7 @@ const VendorAnalyticsDashboard = ({
                                         }
                                     >
                                         {calculateTrend("product_views") >=
-                                        0 ? (
+                                            0 ? (
                                             <TrendingUp className="w-3 h-3 mr-1" />
                                         ) : (
                                             <TrendingDown className="w-3 h-3 mr-1" />
@@ -273,7 +268,7 @@ const VendorAnalyticsDashboard = ({
                         </Card>
 
                         {/* Inquiries */}
-                        <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow">
+                        <Card className="border-0 bg-white dark:bg-slate-900 shadow-lg hover:shadow-xl transition-shadow">
                             <CardHeader className="pb-3">
                                 <div className="flex items-center justify-between">
                                     <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
@@ -314,7 +309,7 @@ const VendorAnalyticsDashboard = ({
                         </Card>
 
                         {/* Shares */}
-                        <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow">
+                        <Card className="border-0 bg-white dark:bg-slate-900 shadow-lg hover:shadow-xl transition-shadow">
                             <CardHeader className="pb-3">
                                 <div className="flex items-center justify-between">
                                     <div className="w-12 h-12 bg-pink-100 rounded-xl flex items-center justify-center">
@@ -333,7 +328,7 @@ const VendorAnalyticsDashboard = ({
                         </Card>
 
                         {/* Unique Visitors */}
-                        <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow">
+                        <Card className="border-0  bg-white dark:bg-slate-900 shadow-lg hover:shadow-xl transition-shadow">
                             <CardHeader className="pb-3">
                                 <div className="flex items-center justify-between">
                                     <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
@@ -355,7 +350,7 @@ const VendorAnalyticsDashboard = ({
                     </div>
 
                     {/* Conversion Rate Card */}
-                    <Card className="border-0 shadow-lg bg-purple-700 text-white">
+                    <Card className="border-0 bg-white dark:bg-slate-900 shadow-lg bg-purple-700 text-white">
                         <CardContent className="p-6">
                             <div className="flex items-center justify-between">
                                 <div>
@@ -379,7 +374,7 @@ const VendorAnalyticsDashboard = ({
                     </Card>
 
                     {/* Trends Chart */}
-                    <Card className="border-0 shadow-lg">
+                    <Card className="border-0 bg-white dark:bg-slate-900 shadow-lg">
                         <CardHeader>
                             <CardTitle className="text-2xl text-slate-900">
                                 Performance Trends
@@ -414,11 +409,10 @@ const VendorAnalyticsDashboard = ({
                                                         <div
                                                             className="w-full bg-purple-500 hover:bg-purple-600 cursor-pointer transition-all"
                                                             style={{
-                                                                height: `${
-                                                                    (data.store_visits /
-                                                                        maxValue) *
+                                                                height: `${(data.store_visits /
+                                                                    maxValue) *
                                                                     200
-                                                                }px`,
+                                                                    }px`,
                                                                 minHeight:
                                                                     "8px",
                                                             }}
@@ -436,11 +430,10 @@ const VendorAnalyticsDashboard = ({
                                                         <div
                                                             className="w-full bg-blue-500 hover:bg-blue-600 cursor-pointer transition-all"
                                                             style={{
-                                                                height: `${
-                                                                    (data.product_views /
-                                                                        maxValue) *
+                                                                height: `${(data.product_views /
+                                                                    maxValue) *
                                                                     200
-                                                                }px`,
+                                                                    }px`,
                                                                 minHeight:
                                                                     "8px",
                                                             }}
@@ -458,11 +451,10 @@ const VendorAnalyticsDashboard = ({
                                                         <div
                                                             className="w-full bg-green-500 rounded-t hover:bg-green-600 cursor-pointer transition-all"
                                                             style={{
-                                                                height: `${
-                                                                    (data.inquiries /
-                                                                        maxValue) *
+                                                                height: `${(data.inquiries /
+                                                                    maxValue) *
                                                                     200
-                                                                }px`,
+                                                                    }px`,
                                                                 minHeight:
                                                                     "8px",
                                                             }}
@@ -508,7 +500,7 @@ const VendorAnalyticsDashboard = ({
                     </Card>
 
                     {/* Top Products */}
-                    <Card className="border-0 shadow-lg">
+                    <Card className="border-0 bg-white dark:bg-slate-900 shadow-lg">
                         <CardHeader>
                             <CardTitle className="text-2xl text-slate-900">
                                 Top Performing Products

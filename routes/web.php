@@ -12,6 +12,7 @@ use App\Http\Controllers\MediaLibraryController;
 use App\Http\Controllers\AnalyticsTrackingController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\DashboardController;
 
 
 
@@ -45,10 +46,8 @@ Route::middleware('auth')->group(function () {
         // Routes that require business to exist
         Route::middleware('business.exists')->group(function () {
 
-            Route::get('/dashboard', function () {
-                    return Inertia::render('Dashboard');
-                }
-                )->middleware(['verified'])->name('dashboard');
+            Route::get('/dashboard', [DashboardController::class, 'index'])
+                ->middleware(['verified'])->name('dashboard');
 
                 // Product routes
                 Route::group(['prefix' => 'products', 'as' => 'products.'], function () {
@@ -73,35 +72,33 @@ Route::middleware('auth')->group(function () {
                 Route::get('/analytics', [AnalyticsTrackingController::class , 'index'])->name('vendor.analytics');
 
                 Route::get('/settings/business-information', [BusinessController::class , 'edit'])->name('settings');
+                Route::get('/settings/subscription', [SubscriptionController::class , 'manage'])->name('settings.subscription');
                 // update business info
                 Route::post('/business/update/{id}', [BusinessController::class , 'update'])->name('business.update');
 
                 Route::post('/ai/suggestion', [AISuggestionController::class , 'suggest'])->name('ai.suggestion');
 
+                Route::get('/select-plan', [SubscriptionController::class , 'showPlans'])->name('plans.select');
+                Route::post('/select-plan', [SubscriptionController::class , 'selectPlan'])->name('plans.select.submit');
+                Route::get('/checkout', [SubscriptionController::class , 'checkout'])->name('checkout');
 
+                // Payment callback routes (process payment verification + create records)
+                Route::get('/payment/paystack/callback', [PaymentController::class , 'paystackCallback'])->name('paystack.callback');
+                Route::get('/payment/stripe/callback', [PaymentController::class , 'stripeCallback'])->name('stripe.callback');
 
+                // Post-payment pages
+                Route::get('/payment/success', function () {
+                    return \Inertia\Inertia::render('Subscriptions/PaymentSuccess');
+                }
+                )->name('payment.success');
 
+                Route::get('/billing/cancel', function () {
+                    return \Inertia\Inertia::render('Subscriptions/PaymentCancel');
+                }
+                )->name('billing.cancel');
 
             }
             );
-
-            Route::get('/select-plan', [SubscriptionController::class , 'showPlans'])->name('plans.select');
-            Route::post('/select-plan', [SubscriptionController::class , 'selectPlan'])->name('plans.select.submit');
-            Route::get('/checkout', [SubscriptionController::class , 'checkout'])->name('checkout');
-
-            // Payment callback routes (process payment verification + create records)
-            Route::get('/payment/paystack/callback', [PaymentController::class, 'paystackCallback'])->name('paystack.callback');
-            Route::get('/payment/stripe/callback', [PaymentController::class, 'stripeCallback'])->name('stripe.callback');
-
-            // Post-payment pages
-            Route::get('/payment/success', function () {
-                return \Inertia\Inertia::render('Subscriptions/PaymentSuccess');
-            })->name('payment.success');
-
-            Route::get('/billing/cancel', function () {
-                return \Inertia\Inertia::render('Subscriptions/PaymentCancel');
-            })->name('billing.cancel');
-
         });
 
 //store routes

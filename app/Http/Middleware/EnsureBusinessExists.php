@@ -18,20 +18,17 @@ class EnsureBusinessExists
         }
 
         // Allow callback and checkout routes to pass through
-        if ($request->routeIs('paystack.callback') || 
-            $request->routeIs('stripe.callback') || 
-            $request->routeIs('checkout') ||
-            $request->routeIs('payment.success') ||
-            $request->routeIs('billing.cancel') ||
-            $request->routeIs('business.create')) {
+        if ($request->routeIs('paystack.callback') ||
+        $request->routeIs('stripe.callback') ||
+        $request->routeIs('checkout') ||
+        $request->routeIs('payment.success') ||
+        $request->routeIs('billing.cancel') ||
+        $request->routeIs('business.create')) {
             return $next($request);
         }
 
-        // If user has active subscription and tries to access select-plan, redirect to dashboard
+        // Allow select-plan access (users can change plans at any time)
         if ($request->routeIs('plans.select') || $request->routeIs('plans.select.submit')) {
-            if ($business->activeSubscription()) {
-                return redirect()->route('dashboard');
-            }
             return $next($request);
         }
 

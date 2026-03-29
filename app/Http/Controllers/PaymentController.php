@@ -77,11 +77,26 @@ class PaymentController extends Controller
         $business = Business::findOrFail($businessId);
         $amount = $transactionData['amount'] / 100; // Convert from kobo
 
+        // Extract Paystack subscription code (present when plan was included in transaction)
+        $paystackSubscriptionCode = $transactionData['plan_object']['subscriptions'][0]['subscription_code']
+            ?? $transactionData['subscription_code']
+            ?? null;
+
+        // Extract authorization for future charges
+        $authorizationCode = $transactionData['authorization']['authorization_code'] ?? null;
+
+        Log::info('Paystack callback data', [
+            'reference' => $reference,
+            'subscription_code' => $paystackSubscriptionCode,
+            'authorization_code' => $authorizationCode,
+            'customer_code' => $transactionData['customer']['customer_code'] ?? null,
+        ]);
+
         $this->createSubscriptionAndPayment(
             business: $business,
             plan: $plan,
             provider: 'paystack',
-            providerSubscriptionId: $transactionData['reference'],
+            providerSubscriptionId: $paystackSubscriptionCode ?? $transactionData['reference'],
             providerCustomerId: $transactionData['customer']['customer_code'] ?? null,
             providerPaymentId: $transactionData['reference'],
             currency: $currency,
@@ -199,5 +214,98 @@ class PaymentController extends Controller
         $business->update(['has_selected_plan' => true]);
 
         Log::info("Subscription created for business {$business->id} on plan {$plan->name} via {$provider}");
+    }
+
+    /**
+     * Generate a redirect URL for the user to update their payment method.
+     */
+    public function updatePaymentMethod(Request $request)
+    {
+        $user = $request->user();
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $business = $user->business;
+        $subscription = $business->subscriptions()
+            ->where('status', 'active')
+            ->latest()
+            ->first();
+
+        if (!$subscription) {
+            return response()->json(['error' => 'No active subscription found'], 404);
+        }
+
+        $returnUrl = route('settings.subscription');
+
+        if ($subscription->provider === 'stripe') {
+            if (!$subscription->provider_customer_id) {
+                return response()->json(['error' => 'No Stripe customer linked'], 400);
+            }
+
+            $url = $this->payment->createStripeBillingPortal(
+                $subscription->provider_customer_id,
+                $returnUrl
+            );
+
+            if ($url) {
+                return response()->json(['url' => $url]);
+            }
+
+            return response()->json(['error' => 'Failed to create billing portal session'], 500);
+        }
+
+        if ($subscription->provider === 'paystack') {
+            $subscriptionCode = $subscription->provider_subscription_id;
+
+            // If stored value is not a valid Paystack subscription code (SUB_xxx),
+            // look it up via customer's subscriptions
+            if (!$subscriptionCode || !str_starts_with($subscriptionCode, 'SUB_')) {
+                $customerCode = $subscription->provider_customer_id;
+                if (!$customerCode) {
+                    return response()->json(['error' => 'No Paystack customer linked'], 400);
+                }
+
+                // Fetch customer's subscriptions from Paystack
+                $subscriptionCode = $this->payment->getPaystackCustomerActiveSubscription($customerCode);
+
+                // If still no subscription, create one via Paystack API
+                if (!$subscriptionCode) {
+                    $pricing = $subscription->plan->pricing()
+                        ->where('currency', $subscription->currency)
+                        ->first();
+
+                    $planCode = $subscription->interval === 'yearly'
+                        ? ($pricing->paystack_yearly_plan_code ?? $pricing->paystack_plan_code)
+                        : ($pricing->paystack_monthly_plan_code ?? $pricing->paystack_plan_code);
+
+                    if ($planCode) {
+                        $subscriptionCode = $this->payment->createPaystackSubscription(
+                            $customerCode,
+                            $planCode
+                        );
+                    }
+                }
+
+                // Update the stored subscription code for future use
+                if ($subscriptionCode) {
+                    $subscription->update(['provider_subscription_id' => $subscriptionCode]);
+                }
+            }
+
+            if (!$subscriptionCode) {
+                return response()->json(['error' => 'Could not link your Paystack subscription. Please re-subscribe to enable card management.'], 400);
+            }
+
+            $url = $this->payment->getPaystackSubscriptionManageLink($subscriptionCode);
+
+            if ($url) {
+                return response()->json(['url' => $url]);
+            }
+
+            return response()->json(['error' => 'Failed to get subscription manage link'], 500);
+        }
+
+        return response()->json(['error' => 'Payment method update not available for this provider'], 400);
     }
 }
