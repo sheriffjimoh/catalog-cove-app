@@ -132,20 +132,38 @@ const VendorAnalyticsDashboard = ({
         ])
     );
 
+    const TrendBadge = ({ value }: { value: number }) => (
+        <Badge
+            variant={value >= 0 ? "default" : "secondary"}
+            className={
+                value >= 0
+                    ? "bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300"
+                    : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
+            }
+        >
+            {value >= 0 ? (
+                <TrendingUp className="w-3 h-3 mr-1" />
+            ) : (
+                <TrendingDown className="w-3 h-3 mr-1" />
+            )}
+            {Math.abs(value).toFixed(0)}%
+        </Badge>
+    );
+
     return (
         <AuthenticatedLayout>
             <Head title="Analytics Dashboard" />
-            <div className="min-h-screen bg-slate-50   dark:bg-gray-800">
+            <div className="min-h-screen bg-white dark:bg-black">
                 <div className="max-w-7xl mx-auto p-4 md:p-8 space-y-8">
                     {/* Header */}
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                         <div>
-                            <h1 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-2">
+                            <h1 className="text-3xl md:text-4xl font-bold text-black dark:text-white mb-2">
                                 Analytics Dashboard
                             </h1>
-                            <p className="text-slate-600">
+                            <p className="text-gray-500 dark:text-gray-400">
                                 Track your store performance for{" "}
-                                <span className="font-semibold text-purple-700">
+                                <span className="font-semibold text-purple-700 dark:text-purple-400">
                                     {business.name}
                                 </span>
                             </p>
@@ -162,10 +180,11 @@ const VendorAnalyticsDashboard = ({
                                             : "outline"
                                     }
                                     onClick={() => handleDateRangeChange(days)}
-                                    className={`bg-white dark:bg-slate-900 ${selectedRange === days
-                                            ? "text-white hover:bg-purple-800"
-                                            : "text-slate-900 dark:text-white hover:bg-purple-50"
-                                        }`}
+                                    className={
+                                        selectedRange === days
+                                            ? "bg-purple-700 hover:bg-purple-800 text-white border-purple-700"
+                                            : "bg-white dark:bg-gray-950 text-black dark:text-white border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-900"
+                                    }
                                 >
                                     <Calendar className="w-4 h-4 mr-2" />
                                     {days === "7"
@@ -179,170 +198,100 @@ const VendorAnalyticsDashboard = ({
                     </div>
 
                     {/* Overview Cards */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
                         {/* Store Visits */}
-                        <Card className="border-0  bg-white dark:bg-slate-900 shadow-lg hover:shadow-xl transition-shadow">
+                        <Card className="border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 shadow-none">
                             <CardHeader className="pb-3">
                                 <div className="flex items-center justify-between">
-                                    <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
-                                        <Store className="w-6 h-6 text-purple-700" />
+                                    <div className="w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center">
+                                        <Store className="w-5 h-5 text-purple-700 dark:text-purple-400" />
                                     </div>
-                                    <Badge
-                                        variant={
-                                            calculateTrend("store_visits") >= 0
-                                                ? "default"
-                                                : "secondary"
-                                        }
-                                        className={
-                                            calculateTrend("store_visits") >= 0
-                                                ? "bg-green-100 text-green-700"
-                                                : "bg-red-100 text-red-700"
-                                        }
-                                    >
-                                        {calculateTrend("store_visits") >= 0 ? (
-                                            <TrendingUp className="w-3 h-3 mr-1" />
-                                        ) : (
-                                            <TrendingDown className="w-3 h-3 mr-1" />
-                                        )}
-                                        {Math.abs(
-                                            calculateTrend("store_visits")
-                                        ).toFixed(0)}
-                                        %
-                                    </Badge>
+                                    <TrendBadge value={calculateTrend("store_visits")} />
                                 </div>
                             </CardHeader>
                             <CardContent>
-                                <h3 className="text-3xl font-bold text-slate-900 mb-1">
-                                    {formatNumber(
-                                        analytics.overview.store_visits
-                                    )}
+                                <h3 className="text-3xl font-bold text-black dark:text-white mb-1">
+                                    {formatNumber(analytics.overview.store_visits)}
                                 </h3>
-                                <p className="text-sm text-slate-600">
+                                <p className="text-sm text-gray-500 dark:text-gray-400">
                                     Store Visits
                                 </p>
                             </CardContent>
                         </Card>
 
                         {/* Product Views */}
-                        <Card className="border-0 bg-white dark:bg-slate-900 shadow-lg hover:shadow-xl transition-shadow">
+                        <Card className="border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 shadow-none">
                             <CardHeader className="pb-3">
                                 <div className="flex items-center justify-between">
-                                    <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-                                        <Eye className="w-6 h-6 text-blue-700" />
+                                    <div className="w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center">
+                                        <Eye className="w-5 h-5 text-purple-700 dark:text-purple-400" />
                                     </div>
-                                    <Badge
-                                        variant={
-                                            calculateTrend("product_views") >= 0
-                                                ? "default"
-                                                : "secondary"
-                                        }
-                                        className={
-                                            calculateTrend("product_views") >= 0
-                                                ? "bg-green-100 text-green-700"
-                                                : "bg-red-100 text-red-700"
-                                        }
-                                    >
-                                        {calculateTrend("product_views") >=
-                                            0 ? (
-                                            <TrendingUp className="w-3 h-3 mr-1" />
-                                        ) : (
-                                            <TrendingDown className="w-3 h-3 mr-1" />
-                                        )}
-                                        {Math.abs(
-                                            calculateTrend("product_views")
-                                        ).toFixed(0)}
-                                        %
-                                    </Badge>
+                                    <TrendBadge value={calculateTrend("product_views")} />
                                 </div>
                             </CardHeader>
                             <CardContent>
-                                <h3 className="text-3xl font-bold text-slate-900 mb-1">
-                                    {formatNumber(
-                                        analytics.overview.product_views
-                                    )}
+                                <h3 className="text-3xl font-bold text-black dark:text-white mb-1">
+                                    {formatNumber(analytics.overview.product_views)}
                                 </h3>
-                                <p className="text-sm text-slate-600">
+                                <p className="text-sm text-gray-500 dark:text-gray-400">
                                     Product Views
                                 </p>
                             </CardContent>
                         </Card>
 
                         {/* Inquiries */}
-                        <Card className="border-0 bg-white dark:bg-slate-900 shadow-lg hover:shadow-xl transition-shadow">
+                        <Card className="border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 shadow-none">
                             <CardHeader className="pb-3">
                                 <div className="flex items-center justify-between">
-                                    <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
-                                        <MessageCircle className="w-6 h-6 text-green-700" />
+                                    <div className="w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center">
+                                        <MessageCircle className="w-5 h-5 text-purple-700 dark:text-purple-400" />
                                     </div>
-                                    <Badge
-                                        variant={
-                                            calculateTrend("inquiries") >= 0
-                                                ? "default"
-                                                : "secondary"
-                                        }
-                                        className={
-                                            calculateTrend("inquiries") >= 0
-                                                ? "bg-green-100 text-green-700"
-                                                : "bg-red-100 text-red-700"
-                                        }
-                                    >
-                                        {calculateTrend("inquiries") >= 0 ? (
-                                            <TrendingUp className="w-3 h-3 mr-1" />
-                                        ) : (
-                                            <TrendingDown className="w-3 h-3 mr-1" />
-                                        )}
-                                        {Math.abs(
-                                            calculateTrend("inquiries")
-                                        ).toFixed(0)}
-                                        %
-                                    </Badge>
+                                    <TrendBadge value={calculateTrend("inquiries")} />
                                 </div>
                             </CardHeader>
                             <CardContent>
-                                <h3 className="text-3xl font-bold text-slate-900 mb-1">
+                                <h3 className="text-3xl font-bold text-black dark:text-white mb-1">
                                     {formatNumber(analytics.overview.inquiries)}
                                 </h3>
-                                <p className="text-sm text-slate-600">
+                                <p className="text-sm text-gray-500 dark:text-gray-400">
                                     Inquiries
                                 </p>
                             </CardContent>
                         </Card>
 
                         {/* Shares */}
-                        <Card className="border-0 bg-white dark:bg-slate-900 shadow-lg hover:shadow-xl transition-shadow">
+                        <Card className="border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 shadow-none">
                             <CardHeader className="pb-3">
                                 <div className="flex items-center justify-between">
-                                    <div className="w-12 h-12 bg-pink-100 rounded-xl flex items-center justify-center">
-                                        <Share2 className="w-6 h-6 text-pink-700" />
+                                    <div className="w-10 h-10 bg-gray-100 dark:bg-gray-800 rounded-xl flex items-center justify-center">
+                                        <Share2 className="w-5 h-5 text-black dark:text-white" />
                                     </div>
                                 </div>
                             </CardHeader>
                             <CardContent>
-                                <h3 className="text-3xl font-bold text-slate-900 mb-1">
+                                <h3 className="text-3xl font-bold text-black dark:text-white mb-1">
                                     {formatNumber(analytics.overview.shares)}
                                 </h3>
-                                <p className="text-sm text-slate-600">
+                                <p className="text-sm text-gray-500 dark:text-gray-400">
                                     Product Shares
                                 </p>
                             </CardContent>
                         </Card>
 
                         {/* Unique Visitors */}
-                        <Card className="border-0  bg-white dark:bg-slate-900 shadow-lg hover:shadow-xl transition-shadow">
+                        <Card className="border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 shadow-none">
                             <CardHeader className="pb-3">
                                 <div className="flex items-center justify-between">
-                                    <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
-                                        <Users className="w-6 h-6 text-orange-700" />
+                                    <div className="w-10 h-10 bg-gray-100 dark:bg-gray-800 rounded-xl flex items-center justify-center">
+                                        <Users className="w-5 h-5 text-black dark:text-white" />
                                     </div>
                                 </div>
                             </CardHeader>
                             <CardContent>
-                                <h3 className="text-3xl font-bold text-slate-900 mb-1">
-                                    {formatNumber(
-                                        analytics.overview.unique_visitors
-                                    )}
+                                <h3 className="text-3xl font-bold text-black dark:text-white mb-1">
+                                    {formatNumber(analytics.overview.unique_visitors)}
                                 </h3>
-                                <p className="text-sm text-slate-600">
+                                <p className="text-sm text-gray-500 dark:text-gray-400">
                                     Unique Visitors
                                 </p>
                             </CardContent>
@@ -350,36 +299,36 @@ const VendorAnalyticsDashboard = ({
                     </div>
 
                     {/* Conversion Rate Card */}
-                    <Card className="border-0 bg-white dark:bg-slate-900 shadow-lg bg-purple-700 text-white">
+                    <Card className="border border-gray-200 dark:border-gray-800 bg-purple-700 shadow-none">
                         <CardContent className="p-6">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <p className="text-purple-100 mb-2">
+                                    <p className="text-purple-200 mb-2">
                                         Conversion Rate
                                     </p>
-                                    <h3 className="text-4xl font-bold">
+                                    <h3 className="text-4xl font-bold text-white">
                                         {analytics.conversion_rate}%
                                     </h3>
-                                    <p className="text-sm text-purple-100 mt-2">
+                                    <p className="text-sm text-purple-200 mt-2">
                                         {analytics.overview.inquiries} inquiries
                                         from {analytics.overview.product_views}{" "}
                                         product views
                                     </p>
                                 </div>
                                 <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center">
-                                    <Award className="w-10 h-10" />
+                                    <Award className="w-10 h-10 text-white" />
                                 </div>
                             </div>
                         </CardContent>
                     </Card>
 
                     {/* Trends Chart */}
-                    <Card className="border-0 bg-white dark:bg-slate-900 shadow-lg">
+                    <Card className="border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 shadow-none">
                         <CardHeader>
-                            <CardTitle className="text-2xl text-slate-900">
+                            <CardTitle className="text-2xl text-black dark:text-white">
                                 Performance Trends
                             </CardTitle>
-                            <CardDescription>
+                            <CardDescription className="text-gray-500 dark:text-gray-400">
                                 Daily activity over the selected period
                             </CardDescription>
                         </CardHeader>
@@ -388,11 +337,6 @@ const VendorAnalyticsDashboard = ({
                                 {/* Simple Bar Chart */}
                                 <div className="h-64 flex items-end justify-center gap-2 px-4">
                                     {chartData.map((data, index) => {
-                                        const total =
-                                            data.store_visits +
-                                            data.product_views +
-                                            data.inquiries;
-
                                         return (
                                             <div
                                                 key={index}
@@ -404,69 +348,53 @@ const VendorAnalyticsDashboard = ({
                                                     className="w-full flex flex-col-reverse gap-1"
                                                     style={{ height: "200px" }}
                                                 >
-                                                    {/* Store Visits - Purple */}
+                                                    {/* Store Visits - Dark Purple */}
                                                     {data.store_visits > 0 && (
                                                         <div
-                                                            className="w-full bg-purple-500 hover:bg-purple-600 cursor-pointer transition-all"
+                                                            className="w-full bg-purple-700 hover:bg-purple-800 cursor-pointer transition-all"
                                                             style={{
-                                                                height: `${(data.store_visits /
-                                                                    maxValue) *
-                                                                    200
-                                                                    }px`,
-                                                                minHeight:
-                                                                    "8px",
+                                                                height: `${(data.store_visits / maxValue) * 200}px`,
+                                                                minHeight: "8px",
                                                             }}
                                                             title={`Store Visits: ${data.store_visits}`}
                                                         >
                                                             <span className="text-xs text-white font-bold flex items-center justify-center h-full">
-                                                                {
-                                                                    data.store_visits
-                                                                }
+                                                                {data.store_visits}
                                                             </span>
                                                         </div>
                                                     )}
-                                                    {/* Product Views - Blue */}
+                                                    {/* Product Views - Light Purple */}
                                                     {data.product_views > 0 && (
                                                         <div
-                                                            className="w-full bg-blue-500 hover:bg-blue-600 cursor-pointer transition-all"
+                                                            className="w-full bg-purple-400 hover:bg-purple-500 cursor-pointer transition-all"
                                                             style={{
-                                                                height: `${(data.product_views /
-                                                                    maxValue) *
-                                                                    200
-                                                                    }px`,
-                                                                minHeight:
-                                                                    "8px",
+                                                                height: `${(data.product_views / maxValue) * 200}px`,
+                                                                minHeight: "8px",
                                                             }}
                                                             title={`Product Views: ${data.product_views}`}
                                                         >
                                                             <span className="text-xs text-white font-bold flex items-center justify-center h-full">
-                                                                {
-                                                                    data.product_views
-                                                                }
+                                                                {data.product_views}
                                                             </span>
                                                         </div>
                                                     )}
-                                                    {/* Inquiries - Green */}
+                                                    {/* Inquiries - Black */}
                                                     {data.inquiries > 0 && (
                                                         <div
-                                                            className="w-full bg-green-500 rounded-t hover:bg-green-600 cursor-pointer transition-all"
+                                                            className="w-full bg-black dark:bg-white rounded-t hover:bg-gray-800 dark:hover:bg-gray-200 cursor-pointer transition-all"
                                                             style={{
-                                                                height: `${(data.inquiries /
-                                                                    maxValue) *
-                                                                    200
-                                                                    }px`,
-                                                                minHeight:
-                                                                    "8px",
+                                                                height: `${(data.inquiries / maxValue) * 200}px`,
+                                                                minHeight: "8px",
                                                             }}
                                                             title={`Inquiries: ${data.inquiries}`}
                                                         >
-                                                            <span className="text-xs text-white font-bold flex items-center justify-center h-full">
+                                                            <span className="text-xs text-white dark:text-black font-bold flex items-center justify-center h-full">
                                                                 {data.inquiries}
                                                             </span>
                                                         </div>
                                                     )}
                                                 </div>
-                                                <span className="text-xs text-slate-600 mt-3 font-medium">
+                                                <span className="text-xs text-gray-500 dark:text-gray-400 mt-3 font-medium">
                                                     {data.date}
                                                 </span>
                                             </div>
@@ -477,20 +405,20 @@ const VendorAnalyticsDashboard = ({
                                 {/* Legend */}
                                 <div className="flex flex-wrap justify-center gap-6">
                                     <div className="flex items-center gap-2">
-                                        <div className="w-4 h-4 bg-purple-500 rounded"></div>
-                                        <span className="text-sm text-slate-600">
+                                        <div className="w-4 h-4 bg-purple-700 rounded"></div>
+                                        <span className="text-sm text-gray-500 dark:text-gray-400">
                                             Store Visits
                                         </span>
                                     </div>
                                     <div className="flex items-center gap-2">
-                                        <div className="w-4 h-4 bg-blue-500 rounded"></div>
-                                        <span className="text-sm text-slate-600">
+                                        <div className="w-4 h-4 bg-purple-400 rounded"></div>
+                                        <span className="text-sm text-gray-500 dark:text-gray-400">
                                             Product Views
                                         </span>
                                     </div>
                                     <div className="flex items-center gap-2">
-                                        <div className="w-4 h-4 bg-green-500 rounded"></div>
-                                        <span className="text-sm text-slate-600">
+                                        <div className="w-4 h-4 bg-black dark:bg-white rounded"></div>
+                                        <span className="text-sm text-gray-500 dark:text-gray-400">
                                             Inquiries
                                         </span>
                                     </div>
@@ -500,19 +428,19 @@ const VendorAnalyticsDashboard = ({
                     </Card>
 
                     {/* Top Products */}
-                    <Card className="border-0 bg-white dark:bg-slate-900 shadow-lg">
+                    <Card className="border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 shadow-none">
                         <CardHeader>
-                            <CardTitle className="text-2xl text-slate-900">
+                            <CardTitle className="text-2xl text-black dark:text-white">
                                 Top Performing Products
                             </CardTitle>
-                            <CardDescription>
+                            <CardDescription className="text-gray-500 dark:text-gray-400">
                                 Your best products by views and inquiries
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
                             {analytics.top_products.length === 0 ? (
                                 <div className="text-center py-12">
-                                    <p className="text-slate-500">
+                                    <p className="text-gray-500 dark:text-gray-400">
                                         No product data available yet
                                     </p>
                                 </div>
@@ -522,10 +450,10 @@ const VendorAnalyticsDashboard = ({
                                         (product, index) => (
                                             <div
                                                 key={product.id}
-                                                className="flex items-center gap-4 p-4 bg-slate-50 rounded-xl hover:bg-slate-100 transition-colors"
+                                                className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-900 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                                             >
                                                 {/* Rank */}
-                                                <div className="flex-shrink-0 w-8 h-8 bg-purple-700 text-white rounded-full flex items-center justify-center font-bold">
+                                                <div className="flex-shrink-0 w-8 h-8 bg-purple-700 text-white rounded-full flex items-center justify-center font-bold text-sm">
                                                     {index + 1}
                                                 </div>
 
@@ -533,15 +461,15 @@ const VendorAnalyticsDashboard = ({
                                                 <img
                                                     src={product.image}
                                                     alt={product.name}
-                                                    className="w-16 h-16 object-cover rounded-lg"
+                                                    className="w-16 h-16 object-cover rounded-lg border border-gray-200 dark:border-gray-700"
                                                 />
 
                                                 {/* Product Info */}
                                                 <div className="flex-1 min-w-0">
-                                                    <h4 className="font-semibold text-slate-900 truncate">
+                                                    <h4 className="font-semibold text-black dark:text-white truncate">
                                                         {product.name}
                                                     </h4>
-                                                    <div className="flex gap-4 mt-1 text-sm text-slate-600">
+                                                    <div className="flex gap-4 mt-1 text-sm text-gray-500 dark:text-gray-400">
                                                         <span className="flex items-center gap-1">
                                                             <Eye className="w-4 h-4" />
                                                             {product.views}{" "}
@@ -557,13 +485,10 @@ const VendorAnalyticsDashboard = ({
 
                                                 {/* Conversion Rate */}
                                                 <div className="text-right">
-                                                    <div className="text-2xl font-bold text-purple-700">
-                                                        {
-                                                            product.conversion_rate
-                                                        }
-                                                        %
+                                                    <div className="text-2xl font-bold text-purple-700 dark:text-purple-400">
+                                                        {product.conversion_rate}%
                                                     </div>
-                                                    <div className="text-xs text-slate-500">
+                                                    <div className="text-xs text-gray-500 dark:text-gray-400">
                                                         conversion
                                                     </div>
                                                 </div>
