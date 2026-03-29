@@ -57,8 +57,8 @@ const Checkout: React.FC<Props> = ({ plan, pricing, interval, currency, provider
                 plan_id: plan.id,
                 currency: currency,
                 plan_pricing_id: priceId,
-                provider: provider, // 'stripe' or 'paystack'
-                interval: interval, // 'monthly' or 'yearly'
+                provider: provider,
+                interval: interval,
             }),
         });
 
@@ -71,16 +71,16 @@ const Checkout: React.FC<Props> = ({ plan, pricing, interval, currency, provider
     const price = interval === 'yearly' ? pricing.yearly_price : pricing.monthly_price;
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-purple-50">
+        <div className="min-h-screen flex flex-col items-center justify-center bg-white">
             <Head title="Checkout" />
-            <div className="bg-white rounded-xl shadow-lg p-10 w-full max-w-md">
-                <h2 className="text-2xl font-bold mb-4">{plan.name} Plan Checkout</h2>
-                <p className="mb-4 text-slate-600">
+            <div className="bg-white rounded-2xl border border-gray-200 p-10 w-full max-w-md">
+                <h2 className="text-2xl font-bold mb-4 text-black">{plan.name} Plan Checkout</h2>
+                <p className="mb-4 text-gray-500">
                     You are subscribing to the {plan.name} plan ({interval}) for {currency} {price}.
                 </p>
                 <button
                     onClick={handlePayment}
-                    className="w-full py-3 px-6 bg-gradient-to-r from-purple-700 to-black text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all"
+                    className="w-full py-3 px-6 bg-purple-700 hover:bg-purple-800 text-white font-semibold rounded-xl transition-colors"
                 >
                     Pay with {provider === 'stripe' ? 'Stripe' : 'Paystack'}
                 </button>

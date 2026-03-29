@@ -20,14 +20,13 @@ export default function StorePageHeader({ vendor }: { vendor: any }) {
     };
 
     return (
-        <div className="bg-white border-b border-purple-100 sticky top-0 z-40 backdrop-blur-lg bg-white/95 shadow-sm">
+        <div className="bg-white border-b border-gray-200 sticky top-0 z-40 backdrop-blur-lg bg-white/95">
             <div className="max-w-7xl mx-auto p-4 md:p-6">
                 <div className="flex flex-col lg:flex-row gap-6 items-start lg:items-center">
                     {/* Logo & Info */}
                     <div className="flex gap-4 items-start flex-1">
-                        <div className="relative group flex-shrink-0">
-                            <div className="absolute inset-0  rounded-2xl blur-lg opacity-30 group-hover:opacity-50 transition-opacity"></div>
-                            <div className="relative bg-white rounded-2xl p-3 shadow-lg border border-purple-100">
+                        <div className="relative flex-shrink-0">
+                            <div className="bg-white rounded-2xl p-3 shadow-sm border border-gray-200">
                                 <img
                                     src={
                                         vendor?.logo ||
@@ -41,7 +40,7 @@ export default function StorePageHeader({ vendor }: { vendor: any }) {
 
                         <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 flex-wrap mb-1">
-                                <h1 className="text-2xl md:text-3xl font-bold text-purple-700 bg-clip-text ">
+                                <h1 className="text-2xl md:text-3xl font-bold text-black">
                                     {vendor?.name}
                                 </h1>
                                 <Badge className="bg-purple-100 text-purple-700 border-0">
@@ -49,20 +48,20 @@ export default function StorePageHeader({ vendor }: { vendor: any }) {
                                     Verified
                                 </Badge>
                             </div>
-                            <p className="text-slate-600 text-sm md:text-base mb-3 line-clamp-2">
+                            <p className="text-gray-500 text-sm md:text-base mb-3 line-clamp-2">
                                 {vendor?.short_note}
                             </p>
 
                             {/* Quick Contact Info */}
                             <div className="flex flex-wrap gap-3 text-sm">
-                                <div className="flex items-center gap-1.5 text-slate-600">
-                                    <MapPin className="w-4 h-4 text-purple-600" />
+                                <div className="flex items-center gap-1.5 text-gray-500">
+                                    <MapPin className="w-4 h-4 text-purple-700" />
                                     <span className="line-clamp-1">
                                         {vendor?.address}
                                     </span>
                                 </div>
-                                <div className="flex items-center gap-1.5 text-slate-600">
-                                    <Phone className="w-4 h-4 text-green-600" />
+                                <div className="flex items-center gap-1.5 text-gray-500">
+                                    <Phone className="w-4 h-4 text-purple-700" />
                                     <span>{vendor?.whatsapp}</span>
                                 </div>
                             </div>
@@ -74,14 +73,14 @@ export default function StorePageHeader({ vendor }: { vendor: any }) {
                         <Button
                             onClick={openMaps}
                             variant="outline"
-                            className="flex-1 lg:flex-initial hover:bg-purple-50 hover:border-purple-300"
+                            className="flex-1 lg:flex-initial border-gray-200 text-black hover:bg-gray-50 hover:border-gray-300"
                         >
                             <MapPin className="w-4 h-4 mr-2" />
                             Location
                         </Button>
                         <Button
                             onClick={openWhatsApp}
-                            className="flex-1 lg:flex-initial bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800"
+                            className="flex-1 lg:flex-initial bg-purple-700 hover:bg-purple-800 text-white"
                         >
                             <MessageCircle className="w-4 h-4 mr-2" />
                             Contact

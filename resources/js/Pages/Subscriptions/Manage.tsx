@@ -101,15 +101,15 @@ const ManageSubscription: React.FC<Props> = ({ subscription, payments, usage, da
     const getStatusConfig = (status: string) => {
         switch (status) {
             case 'active':
-                return { label: 'Active', color: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400', icon: CheckCircle2 };
+                return { label: 'Active', color: 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400', icon: CheckCircle2 };
             case 'cancelled':
-                return { label: 'Cancelled', color: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400', icon: AlertTriangle };
+                return { label: 'Cancelled', color: 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400', icon: AlertTriangle };
             case 'expired':
                 return { label: 'Expired', color: 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400', icon: Clock };
             case 'past_due':
-                return { label: 'Past Due', color: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400', icon: AlertTriangle };
+                return { label: 'Past Due', color: 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400', icon: AlertTriangle };
             default:
-                return { label: 'Pending', color: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400', icon: Clock };
+                return { label: 'Pending', color: 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400', icon: Clock };
         }
     };
 
@@ -160,7 +160,7 @@ const ManageSubscription: React.FC<Props> = ({ subscription, payments, usage, da
     return (
         <AuthenticatedLayout>
             <Head title="Subscription" />
-            <div className="min-h-screen bg-white dark:bg-gray-900">
+            <div className="min-h-screen bg-white dark:bg-black">
                 <div className="grid grid-cols-12 gap-0">
                     <SettingsSidebar />
                     <div className="col-span-12 lg:col-span-9">
@@ -168,10 +168,10 @@ const ManageSubscription: React.FC<Props> = ({ subscription, payments, usage, da
                             {/* Header */}
                             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                                 <div>
-                                    <h1 className="text-3xl font-bold text-slate-900 dark:text-white">
+                                    <h1 className="text-3xl font-bold text-black dark:text-white">
                                         Subscription
                                     </h1>
-                                    <p className="text-slate-500 dark:text-slate-400 mt-1">
+                                    <p className="text-gray-500 dark:text-gray-400 mt-1">
                                         Manage your plan, billing, and payment method
                                     </p>
                                 </div>
@@ -185,15 +185,15 @@ const ManageSubscription: React.FC<Props> = ({ subscription, payments, usage, da
 
                             {/* No Subscription State */}
                             {!subscription && (
-                                <Card className="border-0 bg-white dark:bg-slate-800 shadow-lg">
+                                <Card className="border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 shadow-none">
                                     <CardContent className="p-12 text-center">
                                         <div className="w-20 h-20 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center mx-auto mb-6">
-                                            <Crown className="w-10 h-10 text-purple-600 dark:text-purple-400" />
+                                            <Crown className="w-10 h-10 text-purple-700 dark:text-purple-400" />
                                         </div>
-                                        <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-3">
+                                        <h3 className="text-2xl font-bold text-black dark:text-white mb-3">
                                             No Active Subscription
                                         </h3>
-                                        <p className="text-slate-500 dark:text-slate-400 mb-8 max-w-md mx-auto">
+                                        <p className="text-gray-500 dark:text-gray-400 mb-8 max-w-md mx-auto">
                                             Choose a plan to unlock all features and grow your business.
                                         </p>
                                         <Link href="/select-plan">
@@ -210,14 +210,14 @@ const ManageSubscription: React.FC<Props> = ({ subscription, payments, usage, da
                             {subscription && (
                                 <>
                                     {/* Current Plan Card */}
-                                    <Card className="border-0 bg-gradient-to-br from-purple-700 via-purple-800 to-slate-900 shadow-2xl overflow-hidden relative">
+                                    <Card className="border-0 bg-purple-700 overflow-hidden relative">
                                         <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
                                         <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2" />
                                         <CardContent className="p-8 relative z-10">
                                             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                                                 <div className="space-y-3">
                                                     <div className="flex items-center gap-3">
-                                                        <Crown className="w-8 h-8 text-amber-400" />
+                                                        <Crown className="w-8 h-8 text-white" />
                                                         <h2 className="text-3xl font-bold text-white">
                                                             {subscription.plan.name} Plan
                                                         </h2>
@@ -248,21 +248,21 @@ const ManageSubscription: React.FC<Props> = ({ subscription, payments, usage, da
                                     </Card>
 
                                     {/* Info Cards Grid */}
-                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                         {/* Billing Period */}
-                                        <Card className="border-0 bg-white dark:bg-slate-800 shadow-lg hover:shadow-xl transition-shadow">
+                                        <Card className="border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 shadow-none">
                                             <CardContent className="p-6">
                                                 <div className="flex items-start gap-4">
-                                                    <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center flex-shrink-0">
-                                                        <Calendar className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                                                    <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center flex-shrink-0">
+                                                        <Calendar className="w-6 h-6 text-purple-700 dark:text-purple-400" />
                                                     </div>
                                                     <div className="min-w-0">
-                                                        <p className="text-sm text-slate-500 dark:text-slate-400 mb-1">Billing Period</p>
-                                                        <p className="text-sm font-semibold text-slate-900 dark:text-white">
+                                                        <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Billing Period</p>
+                                                        <p className="text-sm font-semibold text-black dark:text-white">
                                                             {formatDate(subscription.current_period_start)}
                                                         </p>
-                                                        <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">to</p>
-                                                        <p className="text-sm font-semibold text-slate-900 dark:text-white">
+                                                        <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">to</p>
+                                                        <p className="text-sm font-semibold text-black dark:text-white">
                                                             {subscription.current_period_end
                                                                 ? formatDate(subscription.current_period_end)
                                                                 : 'No expiry'}
@@ -273,18 +273,18 @@ const ManageSubscription: React.FC<Props> = ({ subscription, payments, usage, da
                                         </Card>
 
                                         {/* Payment Method */}
-                                        <Card className="border-0 bg-white dark:bg-slate-800 shadow-lg hover:shadow-xl transition-shadow">
+                                        <Card className="border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 shadow-none">
                                             <CardContent className="p-6">
                                                 <div className="flex items-start gap-4">
-                                                    <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-xl flex items-center justify-center flex-shrink-0">
-                                                        <CreditCard className="w-6 h-6 text-green-600 dark:text-green-400" />
+                                                    <div className="w-12 h-12 bg-gray-100 dark:bg-gray-800 rounded-xl flex items-center justify-center flex-shrink-0">
+                                                        <CreditCard className="w-6 h-6 text-black dark:text-white" />
                                                     </div>
                                                     <div className="min-w-0">
-                                                        <p className="text-sm text-slate-500 dark:text-slate-400 mb-1">Payment Provider</p>
-                                                        <p className="text-lg font-semibold text-slate-900 dark:text-white">
+                                                        <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Payment Provider</p>
+                                                        <p className="text-lg font-semibold text-black dark:text-white">
                                                             {getProviderLabel(subscription.provider)}
                                                         </p>
-                                                        <p className="text-xs text-slate-400 dark:text-slate-500 capitalize mt-1">
+                                                        <p className="text-xs text-gray-400 dark:text-gray-500 capitalize mt-1">
                                                             Billed {subscription.interval}
                                                         </p>
                                                     </div>
@@ -293,18 +293,18 @@ const ManageSubscription: React.FC<Props> = ({ subscription, payments, usage, da
                                         </Card>
 
                                         {/* Status */}
-                                        <Card className="border-0 bg-white dark:bg-slate-800 shadow-lg hover:shadow-xl transition-shadow">
+                                        <Card className="border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 shadow-none">
                                             <CardContent className="p-6">
                                                 <div className="flex items-start gap-4">
                                                     <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center flex-shrink-0">
-                                                        <Shield className="w-6 h-6 text-purple-600 dark:text-purple-400" />
+                                                        <Shield className="w-6 h-6 text-purple-700 dark:text-purple-400" />
                                                     </div>
                                                     <div className="min-w-0">
-                                                        <p className="text-sm text-slate-500 dark:text-slate-400 mb-1">Status</p>
+                                                        <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Status</p>
                                                         <Badge className={`${getStatusConfig(subscription.status).color} text-sm font-medium`}>
                                                             {getStatusConfig(subscription.status).label}
                                                         </Badge>
-                                                        <p className="text-xs text-slate-400 dark:text-slate-500 mt-2">
+                                                        <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">
                                                             Since {formatDate(subscription.created_at)}
                                                         </p>
                                                     </div>
@@ -315,31 +315,31 @@ const ManageSubscription: React.FC<Props> = ({ subscription, payments, usage, da
 
                                     {/* Card Management */}
                                     {subscription.provider && (
-                                        <Card className="border-0 bg-white dark:bg-slate-800 shadow-lg">
+                                        <Card className="border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 shadow-none">
                                             <CardHeader className="pb-3">
-                                                <CardTitle className="text-lg text-slate-900 dark:text-white flex items-center gap-2">
-                                                    <Wallet className="w-5 h-5 text-purple-600" />
+                                                <CardTitle className="text-lg text-black dark:text-white flex items-center gap-2">
+                                                    <Wallet className="w-5 h-5 text-purple-700" />
                                                     Card Details
                                                 </CardTitle>
                                             </CardHeader>
                                             <CardContent className="space-y-4">
-                                                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 bg-slate-50 dark:bg-slate-700/50 rounded-xl">
+                                                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 bg-gray-50 dark:bg-gray-900 rounded-xl">
                                                     <div className="flex items-center gap-4">
-                                                        <div className="w-12 h-12 bg-white dark:bg-slate-600 rounded-xl flex items-center justify-center shadow-sm border border-slate-200 dark:border-slate-500">
-                                                            <CreditCard className="w-6 h-6 text-slate-600 dark:text-slate-300" />
+                                                        <div className="w-12 h-12 bg-white dark:bg-gray-800 rounded-xl flex items-center justify-center border border-gray-200 dark:border-gray-700">
+                                                            <CreditCard className="w-6 h-6 text-gray-500 dark:text-gray-400" />
                                                         </div>
                                                         <div>
-                                                            <p className="text-sm font-semibold text-slate-900 dark:text-white">
+                                                            <p className="text-sm font-semibold text-black dark:text-white">
                                                                 Card via {getProviderLabel(subscription.provider)}
                                                             </p>
-                                                            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                                                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                                                                 Update your card details for future payments
                                                             </p>
                                                         </div>
                                                     </div>
                                                     <Button
                                                         variant="outline"
-                                                        className="bg-white dark:bg-slate-700 border-slate-200 dark:border-slate-600 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-600 flex-shrink-0"
+                                                        className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 text-black dark:text-white hover:bg-gray-50 dark:hover:bg-gray-800 flex-shrink-0"
                                                         onClick={handleUpdatePaymentMethod}
                                                         disabled={isUpdatingPayment}
                                                     >
@@ -352,9 +352,9 @@ const ManageSubscription: React.FC<Props> = ({ subscription, payments, usage, da
                                                     </Button>
                                                 </div>
 
-                                                <div className="flex items-start gap-3 p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800/50">
-                                                    <AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
-                                                    <div className="text-xs text-amber-700 dark:text-amber-300">
+                                                <div className="flex items-start gap-3 p-3 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800">
+                                                    <AlertTriangle className="w-4 h-4 text-gray-500 dark:text-gray-400 flex-shrink-0 mt-0.5" />
+                                                    <div className="text-xs text-gray-600 dark:text-gray-400">
                                                         <p className="font-medium">Please note:</p>
                                                         <ul className="mt-1 space-y-0.5 list-disc list-inside">
                                                             <li>A small verification charge of ₦50 applies when updating your card.</li>
@@ -369,25 +369,25 @@ const ManageSubscription: React.FC<Props> = ({ subscription, payments, usage, da
                                     {/* Usage & Features */}
                                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                                         {/* Usage Card */}
-                                        <Card className="border-0 bg-white dark:bg-slate-800 shadow-lg">
+                                        <Card className="border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 shadow-none">
                                             <CardHeader className="pb-3">
-                                                <CardTitle className="text-lg text-slate-900 dark:text-white flex items-center gap-2">
-                                                    <Package className="w-5 h-5 text-purple-600" />
+                                                <CardTitle className="text-lg text-black dark:text-white flex items-center gap-2">
+                                                    <Package className="w-5 h-5 text-purple-700" />
                                                     Product Usage
                                                 </CardTitle>
                                             </CardHeader>
                                             <CardContent className="space-y-4">
                                                 <div className="flex items-end justify-between">
                                                     <div>
-                                                        <p className="text-4xl font-bold text-slate-900 dark:text-white">
+                                                        <p className="text-4xl font-bold text-black dark:text-white">
                                                             {usage ? usage.used : 0}
                                                         </p>
-                                                        <p className="text-sm text-slate-500 dark:text-slate-400">
+                                                        <p className="text-sm text-gray-500 dark:text-gray-400">
                                                             of {usage && usage.limit ? usage.limit : '∞'} products used
                                                         </p>
                                                     </div>
                                                     {usage && usage.limit && (
-                                                        <p className={`text-2xl font-bold ${isNearLimit ? 'text-amber-500' : 'text-purple-600 dark:text-purple-400'}`}>
+                                                        <p className={`text-2xl font-bold ${isNearLimit ? 'text-black dark:text-white' : 'text-purple-700 dark:text-purple-400'}`}>
                                                             {Math.round(usagePercentage)}%
                                                         </p>
                                                     )}
@@ -395,18 +395,18 @@ const ManageSubscription: React.FC<Props> = ({ subscription, payments, usage, da
 
                                                 {usage && usage.limit && (
                                                     <div className="space-y-2">
-                                                        <div className="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-3 overflow-hidden">
+                                                        <div className="w-full bg-gray-100 dark:bg-gray-800 rounded-full h-3 overflow-hidden">
                                                             <div
                                                                 className={`h-full rounded-full transition-all duration-500 ${
                                                                     isNearLimit
-                                                                        ? 'bg-gradient-to-r from-amber-400 to-red-500'
-                                                                        : 'bg-gradient-to-r from-purple-500 to-purple-700'
+                                                                        ? 'bg-black dark:bg-white'
+                                                                        : 'bg-purple-700'
                                                                 }`}
                                                                 style={{ width: `${usagePercentage}%` }}
                                                             />
                                                         </div>
                                                         {isNearLimit && (
-                                                            <p className="text-xs text-amber-600 dark:text-amber-400 flex items-center gap-1">
+                                                            <p className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
                                                                 <AlertTriangle className="w-3 h-3" />
                                                                 You're approaching your product limit
                                                             </p>
@@ -416,7 +416,7 @@ const ManageSubscription: React.FC<Props> = ({ subscription, payments, usage, da
 
                                                 {subscription.plan.product_limit === null && (
                                                     <div className="bg-purple-50 dark:bg-purple-900/20 rounded-lg p-3 flex items-center gap-2">
-                                                        <Zap className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+                                                        <Zap className="w-4 h-4 text-purple-700 dark:text-purple-400" />
                                                         <p className="text-sm text-purple-700 dark:text-purple-300">Unlimited products on your plan</p>
                                                     </div>
                                                 )}
@@ -424,10 +424,10 @@ const ManageSubscription: React.FC<Props> = ({ subscription, payments, usage, da
                                         </Card>
 
                                         {/* Plan Features */}
-                                        <Card className="border-0 bg-white dark:bg-slate-800 shadow-lg">
+                                        <Card className="border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 shadow-none">
                                             <CardHeader className="pb-3">
-                                                <CardTitle className="text-lg text-slate-900 dark:text-white flex items-center gap-2">
-                                                    <Zap className="w-5 h-5 text-purple-600" />
+                                                <CardTitle className="text-lg text-black dark:text-white flex items-center gap-2">
+                                                    <Zap className="w-5 h-5 text-purple-700" />
                                                     Plan Features
                                                 </CardTitle>
                                             </CardHeader>
@@ -436,13 +436,13 @@ const ManageSubscription: React.FC<Props> = ({ subscription, payments, usage, da
                                                     <ul className="space-y-3">
                                                         {subscription.plan.features.map((feature, index) => (
                                                             <li key={index} className="flex items-start gap-3">
-                                                                <CheckCircle2 className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
-                                                                <span className="text-sm text-slate-700 dark:text-slate-300">{feature}</span>
+                                                                <CheckCircle2 className="w-5 h-5 text-purple-700 flex-shrink-0 mt-0.5" />
+                                                                <span className="text-sm text-gray-600 dark:text-gray-300">{feature}</span>
                                                             </li>
                                                         ))}
                                                     </ul>
                                                 ) : (
-                                                    <p className="text-sm text-slate-500 dark:text-slate-400">
+                                                    <p className="text-sm text-gray-500 dark:text-gray-400">
                                                         No feature details available for this plan.
                                                     </p>
                                                 )}
@@ -451,16 +451,16 @@ const ManageSubscription: React.FC<Props> = ({ subscription, payments, usage, da
                                     </div>
 
                                     {/* Payment History */}
-                                    <Card className="border-0 bg-white dark:bg-slate-800 shadow-lg">
+                                    <Card className="border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 shadow-none">
                                         <CardHeader>
-                                            <CardTitle className="text-lg text-slate-900 dark:text-white flex items-center gap-2">
-                                                <RefreshCw className="w-5 h-5 text-purple-600" />
+                                            <CardTitle className="text-lg text-black dark:text-white flex items-center gap-2">
+                                                <RefreshCw className="w-5 h-5 text-purple-700" />
                                                 Payment History
                                             </CardTitle>
                                         </CardHeader>
                                         <CardContent>
                                             {payments.length === 0 ? (
-                                                <p className="text-center text-slate-500 dark:text-slate-400 py-8">
+                                                <p className="text-center text-gray-500 dark:text-gray-400 py-8">
                                                     No payment history available.
                                                 </p>
                                             ) : (
@@ -468,25 +468,25 @@ const ManageSubscription: React.FC<Props> = ({ subscription, payments, usage, da
                                                     {payments.map((payment) => (
                                                         <div
                                                             key={payment.id}
-                                                            className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-700/50 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+                                                            className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-900 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                                                         >
                                                             <div className="flex items-center gap-4">
                                                                 <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
                                                                     payment.status === 'succeeded'
-                                                                        ? 'bg-emerald-100 dark:bg-emerald-900/30'
-                                                                        : 'bg-red-100 dark:bg-red-900/30'
+                                                                        ? 'bg-purple-100 dark:bg-purple-900/30'
+                                                                        : 'bg-gray-100 dark:bg-gray-800'
                                                                 }`}>
                                                                     <CreditCard className={`w-5 h-5 ${
                                                                         payment.status === 'succeeded'
-                                                                            ? 'text-emerald-600 dark:text-emerald-400'
-                                                                            : 'text-red-600 dark:text-red-400'
+                                                                            ? 'text-purple-700 dark:text-purple-400'
+                                                                            : 'text-gray-500 dark:text-gray-400'
                                                                     }`} />
                                                                 </div>
                                                                 <div>
-                                                                    <p className="text-sm font-medium text-slate-900 dark:text-white">
+                                                                    <p className="text-sm font-medium text-black dark:text-white">
                                                                         {payment.description || `Payment via ${getProviderLabel(payment.provider)}`}
                                                                     </p>
-                                                                    <p className="text-xs text-slate-500 dark:text-slate-400">
+                                                                    <p className="text-xs text-gray-500 dark:text-gray-400">
                                                                         {payment.paid_at ? formatDate(payment.paid_at) : 'Pending'}
                                                                         {' · '}
                                                                         <span className="uppercase">{payment.provider}</span>
@@ -494,13 +494,13 @@ const ManageSubscription: React.FC<Props> = ({ subscription, payments, usage, da
                                                                 </div>
                                                             </div>
                                                             <div className="text-right">
-                                                                <p className="text-sm font-bold text-slate-900 dark:text-white">
+                                                                <p className="text-sm font-bold text-black dark:text-white">
                                                                     {formatCurrency(payment.amount, payment.currency)}
                                                                 </p>
                                                                 <Badge className={`text-xs ${
                                                                     payment.status === 'succeeded'
-                                                                        ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
-                                                                        : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
+                                                                        ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400'
+                                                                        : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400'
                                                                 }`}>
                                                                     {payment.status}
                                                                 </Badge>
@@ -515,7 +515,7 @@ const ManageSubscription: React.FC<Props> = ({ subscription, payments, usage, da
                                     {/* Actions */}
                                     <div className="flex flex-wrap gap-4">
                                         <Link href="/select-plan">
-                                            <Button variant="outline" className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700">
+                                            <Button variant="outline" className="bg-white dark:bg-gray-950 border-gray-200 dark:border-gray-800 text-black dark:text-white hover:bg-gray-50 dark:hover:bg-gray-900">
                                                 <ArrowUpRight className="w-4 h-4 mr-2" />
                                                 Change Plan
                                             </Button>
