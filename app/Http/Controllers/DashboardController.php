@@ -102,7 +102,7 @@ class DashboardController extends Controller
         // Store URL
         $storeUrl = url('/store/' . $business->slug);
 
-        return Inertia::render('Dashboard', [
+        return Inertia::render('Dashboard/Index', [
             'stats' => [
                 'totalProducts' => $totalProducts,
                 'publishedProducts' => $publishedProducts,

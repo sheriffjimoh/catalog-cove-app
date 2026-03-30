@@ -183,7 +183,7 @@ const VendorAnalyticsDashboard = ({
                                     className={
                                         selectedRange === days
                                             ? "bg-purple-700 hover:bg-purple-800 text-white border-purple-700"
-                                            : "bg-white dark:bg-gray-950 text-black dark:text-white border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-900"
+                                            : "bg-white dark:bg-slate-900 text-black dark:text-white border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-900"
                                     }
                                 >
                                     <Calendar className="w-4 h-4 mr-2" />
@@ -200,7 +200,7 @@ const VendorAnalyticsDashboard = ({
                     {/* Overview Cards */}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
                         {/* Store Visits */}
-                        <Card className="border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 shadow-none">
+                        <Card className="border border-gray-200 dark:border-gray-800 bg-white dark:bg-slate-900 shadow-none">
                             <CardHeader className="pb-3">
                                 <div className="flex items-center justify-between">
                                     <div className="w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center">
@@ -220,7 +220,7 @@ const VendorAnalyticsDashboard = ({
                         </Card>
 
                         {/* Product Views */}
-                        <Card className="border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 shadow-none">
+                        <Card className="border border-gray-200 dark:border-gray-800 bg-white dark:bg-slate-900 shadow-none">
                             <CardHeader className="pb-3">
                                 <div className="flex items-center justify-between">
                                     <div className="w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center">
@@ -240,7 +240,7 @@ const VendorAnalyticsDashboard = ({
                         </Card>
 
                         {/* Inquiries */}
-                        <Card className="border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 shadow-none">
+                        <Card className="border border-gray-200 dark:border-gray-800 bg-white dark:bg-slate-900 shadow-none">
                             <CardHeader className="pb-3">
                                 <div className="flex items-center justify-between">
                                     <div className="w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center">
@@ -260,7 +260,7 @@ const VendorAnalyticsDashboard = ({
                         </Card>
 
                         {/* Shares */}
-                        <Card className="border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 shadow-none">
+                        <Card className="border border-gray-200 dark:border-gray-800 bg-white dark:bg-slate-900 shadow-none">
                             <CardHeader className="pb-3">
                                 <div className="flex items-center justify-between">
                                     <div className="w-10 h-10 bg-gray-100 dark:bg-gray-800 rounded-xl flex items-center justify-center">
@@ -279,7 +279,7 @@ const VendorAnalyticsDashboard = ({
                         </Card>
 
                         {/* Unique Visitors */}
-                        <Card className="border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 shadow-none">
+                        <Card className="border border-gray-200 dark:border-gray-800 bg-white dark:bg-slate-900 shadow-none">
                             <CardHeader className="pb-3">
                                 <div className="flex items-center justify-between">
                                     <div className="w-10 h-10 bg-gray-100 dark:bg-gray-800 rounded-xl flex items-center justify-center">
@@ -323,7 +323,7 @@ const VendorAnalyticsDashboard = ({
                     </Card>
 
                     {/* Trends Chart */}
-                    <Card className="border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 shadow-none">
+                    <Card className="border border-gray-200 dark:border-gray-800 bg-white dark:bg-slate-900 shadow-none">
                         <CardHeader>
                             <CardTitle className="text-2xl text-black dark:text-white">
                                 Performance Trends
@@ -428,7 +428,7 @@ const VendorAnalyticsDashboard = ({
                     </Card>
 
                     {/* Top Products */}
-                    <Card className="border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 shadow-none">
+                    <Card className="border border-gray-200 dark:border-gray-800 bg-white dark:bg-slate-900 shadow-none">
                         <CardHeader>
                             <CardTitle className="text-2xl text-black dark:text-white">
                                 Top Performing Products

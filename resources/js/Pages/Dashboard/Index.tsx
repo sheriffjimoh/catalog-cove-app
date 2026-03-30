@@ -58,7 +58,7 @@ interface Props {
 }
 
 export default function Dashboard() {
-    const { stats, viewsPerDay, recentProducts, topProducts, planName, storeUrl } = usePage<{ props: Props }>().props as unknown as Props;
+    const { stats, viewsPerDay, recentProducts, topProducts, planName, storeUrl } = usePage().props as unknown as Props;
     const business = usePage().props.business as { name: string; slug: string; logo: string | null } | null;
     const [copied, setCopied] = useState(false);
 
@@ -96,7 +96,7 @@ export default function Dashboard() {
                     </div>
 
                     {/* Store Link Card */}
-                    <div className="border border-gray-200 dark:border-gray-800 rounded-2xl p-6 bg-white dark:bg-gray-950">
+                    <div className="border border-gray-200 dark:border-gray-800 rounded-2xl p-6 bg-white dark:bg-slate-900">
                         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                             <div className="flex items-center gap-4">
                                 <div className="w-12 h-12 bg-purple-700 rounded-xl flex items-center justify-center">
@@ -142,7 +142,7 @@ export default function Dashboard() {
                     {/* Stats Grid */}
                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                         {/* Total Products */}
-                        <div className="border border-gray-200 dark:border-gray-800 rounded-2xl p-5 bg-white dark:bg-gray-950">
+                        <div className="border border-gray-200 dark:border-gray-800 rounded-2xl p-5 bg-white dark:bg-slate-900">
                             <div className="flex items-center justify-between mb-3">
                                 <div className="w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center">
                                     <Package className="w-5 h-5 text-purple-700 dark:text-purple-400" />
@@ -163,7 +163,7 @@ export default function Dashboard() {
                         </div>
 
                         {/* Store Views */}
-                        <div className="border border-gray-200 dark:border-gray-800 rounded-2xl p-5 bg-white dark:bg-gray-950">
+                        <div className="border border-gray-200 dark:border-gray-800 rounded-2xl p-5 bg-white dark:bg-slate-900">
                             <div className="flex items-center justify-between mb-3">
                                 <div className="w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center">
                                     <Eye className="w-5 h-5 text-purple-700 dark:text-purple-400" />
@@ -175,7 +175,7 @@ export default function Dashboard() {
                         </div>
 
                         {/* Unique Visitors */}
-                        <div className="border border-gray-200 dark:border-gray-800 rounded-2xl p-5 bg-white dark:bg-gray-950">
+                        <div className="border border-gray-200 dark:border-gray-800 rounded-2xl p-5 bg-white dark:bg-slate-900">
                             <div className="flex items-center justify-between mb-3">
                                 <div className="w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center">
                                     <Users className="w-5 h-5 text-purple-700 dark:text-purple-400" />
@@ -187,7 +187,7 @@ export default function Dashboard() {
                         </div>
 
                         {/* WhatsApp Clicks */}
-                        <div className="border border-gray-200 dark:border-gray-800 rounded-2xl p-5 bg-white dark:bg-gray-950">
+                        <div className="border border-gray-200 dark:border-gray-800 rounded-2xl p-5 bg-white dark:bg-slate-900">
                             <div className="flex items-center justify-between mb-3">
                                 <div className="w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center">
                                     <MessageCircle className="w-5 h-5 text-purple-700 dark:text-purple-400" />
@@ -203,7 +203,7 @@ export default function Dashboard() {
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
                         {/* Views Chart (7 days) */}
-                        <div className="lg:col-span-2 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 bg-white dark:bg-gray-950">
+                        <div className="lg:col-span-2 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 bg-white dark:bg-slate-900">
                             <div className="flex items-center justify-between mb-6">
                                 <div>
                                     <h3 className="text-lg font-semibold text-black dark:text-white">Store Views</h3>
@@ -237,7 +237,7 @@ export default function Dashboard() {
                         </div>
 
                         {/* Top Products */}
-                        <div className="border border-gray-200 dark:border-gray-800 rounded-2xl p-6 bg-white dark:bg-gray-950">
+                        <div className="border border-gray-200 dark:border-gray-800 rounded-2xl p-6 bg-white dark:bg-slate-900">
                             <div className="flex items-center justify-between mb-6">
                                 <div>
                                     <h3 className="text-lg font-semibold text-black dark:text-white">Top Products</h3>
@@ -273,7 +273,7 @@ export default function Dashboard() {
                     </div>
 
                     {/* Recent Products */}
-                    <div className="border border-gray-200 dark:border-gray-800 rounded-2xl p-6 bg-white dark:bg-gray-950">
+                    <div className="border border-gray-200 dark:border-gray-800 rounded-2xl p-6 bg-white dark:bg-slate-900">
                         <div className="flex items-center justify-between mb-6">
                             <div>
                                 <h3 className="text-lg font-semibold text-black dark:text-white">Recent Products</h3>
@@ -348,11 +348,10 @@ export default function Dashboard() {
                                                     </span>
                                                 </td>
                                                 <td className="py-3">
-                                                    <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium ${
-                                                        product.is_published
-                                                            ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300'
-                                                            : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400'
-                                                    }`}>
+                                                    <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium ${product.is_published
+                                                        ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300'
+                                                        : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400'
+                                                        }`}>
                                                         {product.is_published ? (
                                                             <>
                                                                 <CheckCircle2 className="w-3 h-3" />
@@ -378,7 +377,7 @@ export default function Dashboard() {
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <Link
                             href="/products/create"
-                            className="flex items-center gap-4 p-5 border border-gray-200 dark:border-gray-800 rounded-2xl bg-white dark:bg-gray-950 hover:border-purple-300 dark:hover:border-purple-700 transition-colors group"
+                            className="flex items-center gap-4 p-5 border border-gray-200 dark:border-gray-800 rounded-2xl bg-white dark:bg-slate-900 hover:border-purple-300 dark:hover:border-purple-700 transition-colors group"
                         >
                             <div className="w-10 h-10 bg-purple-700 rounded-xl flex items-center justify-center">
                                 <Package className="w-5 h-5 text-white" />
@@ -391,7 +390,7 @@ export default function Dashboard() {
 
                         <Link
                             href="/analytics"
-                            className="flex items-center gap-4 p-5 border border-gray-200 dark:border-gray-800 rounded-2xl bg-white dark:bg-gray-950 hover:border-purple-300 dark:hover:border-purple-700 transition-colors group"
+                            className="flex items-center gap-4 p-5 border border-gray-200 dark:border-gray-800 rounded-2xl bg-white dark:bg-slate-900 hover:border-purple-300 dark:hover:border-purple-700 transition-colors group"
                         >
                             <div className="w-10 h-10 bg-black dark:bg-white rounded-xl flex items-center justify-center">
                                 <BarChart3 className="w-5 h-5 text-white dark:text-black" />
@@ -404,7 +403,7 @@ export default function Dashboard() {
 
                         <Link
                             href="/settings/business-information"
-                            className="flex items-center gap-4 p-5 border border-gray-200 dark:border-gray-800 rounded-2xl bg-white dark:bg-gray-950 hover:border-purple-300 dark:hover:border-purple-700 transition-colors group"
+                            className="flex items-center gap-4 p-5 border border-gray-200 dark:border-gray-800 rounded-2xl bg-white dark:bg-slate-900 hover:border-purple-300 dark:hover:border-purple-700 transition-colors group"
                         >
                             <div className="w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center">
                                 <Crown className="w-5 h-5 text-purple-700 dark:text-purple-400" />
