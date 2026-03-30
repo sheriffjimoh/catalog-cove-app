@@ -164,6 +164,18 @@ class ProductController extends Controller
             ->with('success', "Product has been {$status}.");
     }
 
+    public function showAdmin(Product $product, Request $request)
+    {
+        if ($product->business_id !== $request->user()->business->id) {
+            abort(403);
+        }
+
+        return Inertia::render('Products/Show', [
+            'product' => $product->load('images'),
+            'business' => $request->user()->business,
+        ]);
+    }
+
     public function show($slug, $productSlug)
     {
         $product = Product::where('slug', $productSlug)->with('images', 'business')->firstOrFail();

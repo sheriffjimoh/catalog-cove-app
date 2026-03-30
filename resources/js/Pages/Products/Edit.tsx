@@ -344,7 +344,7 @@ export default function EditPage({ product }: { product: any }) {
                                         <input
                                             type="file"
                                             multiple
-                                            accept="image/*"
+                                            accept=".jpg,.jpeg,.png"
                                             onChange={(
                                                 e: React.ChangeEvent<HTMLInputElement>
                                             ) =>

@@ -291,7 +291,7 @@ export default function ModernCreate() {
                                         <input
                                             type="file"
                                             multiple
-                                            accept="image/*"
+                                            accept=".jpg,.jpeg,.png"
                                             onChange={(
                                                 e: React.ChangeEvent<HTMLInputElement>
                                             ) =>

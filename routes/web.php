@@ -56,6 +56,7 @@ Route::middleware('auth')->group(function () {
                     Route::post('/', [ProductController::class , 'store'])->name('store');
                     Route::get('/{product}/edit', [ProductController::class , 'edit'])->name('edit');
                     Route::put('/{product}', [ProductController::class , 'update'])->name('update');
+                    Route::get('/{product}', [ProductController::class , 'showAdmin'])->name('show');
                     Route::delete('/{product}', [ProductController::class , 'destroy'])->name('products.destroy');
                     Route::get('/{product}/toggle-publish', [ProductController::class , 'togglePublish'])->name('toggle.publish');
                 }
