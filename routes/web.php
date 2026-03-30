@@ -46,6 +46,19 @@ Route::middleware('auth')->group(function () {
         // Routes that require business to exist
         Route::middleware('business.exists')->group(function () {
 
+            // Subscription expired page
+            Route::get('/subscription-expired', function () {
+                $business = request()->user()->business;
+                $latestSub = $business->subscriptions()->with('plan')->latest()->first();
+
+                return \Inertia\Inertia::render('Subscriptions/SubscriptionExpired', [
+                    'subscription' => $latestSub ? [
+                        'plan_name' => $latestSub->plan?->name ?? 'Unknown',
+                        'expired_at' => $latestSub->current_period_end?->toDateString(),
+                    ] : null,
+                ]);
+            })->name('subscription.expired');
+
             Route::get('/dashboard', [DashboardController::class, 'index'])
                 ->middleware(['verified'])->name('dashboard');
 

@@ -3,7 +3,6 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -17,23 +16,47 @@ class EnsureBusinessExists
             return redirect()->route('business.create');
         }
 
-        // Allow callback and checkout routes to pass through
-        if ($request->routeIs('paystack.callback') ||
-        $request->routeIs('stripe.callback') ||
-        $request->routeIs('checkout') ||
-        $request->routeIs('payment.success') ||
-        $request->routeIs('billing.cancel') ||
-        $request->routeIs('business.create')) {
-            return $next($request);
+        // Routes that should always be accessible regardless of subscription status
+        $allowedRoutes = [
+            'paystack.callback',
+            'stripe.callback',
+            'checkout',
+            'payment.success',
+            'billing.cancel',
+            'business.create',
+            'plans.select',
+            'plans.select.submit',
+            'subscription.expired',
+            'profile.edit',
+            'profile.update',
+            'profile.destroy',
+            'settings',
+            'settings.subscription',
+            'business.update',
+        ];
+
+        foreach ($allowedRoutes as $route) {
+            if ($request->routeIs($route)) {
+                return $next($request);
+            }
         }
 
-        // Allow select-plan access (users can change plans at any time)
-        if ($request->routeIs('plans.select') || $request->routeIs('plans.select.submit')) {
-            return $next($request);
-        }
+        // Check for active subscription
+        $activeSubscription = $business->activeSubscription();
 
-        // If no active subscription, redirect to plan selection
-        if (!$business->activeSubscription()) {
+        if (!$activeSubscription) {
+            // Check if they have any subscription at all (to distinguish expired vs never subscribed)
+            $latestSubscription = $business->subscriptions()
+                ->with('plan')
+                ->latest()
+                ->first();
+
+            if ($latestSubscription && $latestSubscription->isExpired()) {
+                // Had a subscription but it expired
+                return redirect()->route('subscription.expired');
+            }
+
+            // Never had a subscription or it was cancelled
             return redirect()->route('plans.select');
         }
 

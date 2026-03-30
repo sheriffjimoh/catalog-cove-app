@@ -35,6 +35,22 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         try {
+            // Check product limit before creating
+            $business = $request->user()->business;
+            $subscription = $business->activeSubscription();
+
+            if ($subscription) {
+                $plan = $subscription->plan;
+                if ($plan->product_limit !== null) {
+                    $currentCount = $business->products()->count();
+                    if ($currentCount >= $plan->product_limit) {
+                        return back()->withErrors([
+                            'error' => "You've reached the product limit ({$plan->product_limit}) for your {$plan->name} plan. Please upgrade to add more products."
+                        ]);
+                    }
+                }
+            }
+
             $data = $request->validate([
                 'name' => 'required|string|max:255',
                 'description' => 'nullable|string',
