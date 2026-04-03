@@ -7,6 +7,34 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+const currencyMap: Record<string, string> = {
+  NG: '₦',
+  US: '$',
+  GH: 'GH₵',
+  KE: 'KSh',
+  GB: '£',
+  ZA: 'R',
+};
+
+export function formatPrice(price: number | string | null | undefined, countryCode?: string): string {
+  if (price === null || price === undefined || price === '') return '';
+  
+  const numericPrice = typeof price === 'string' 
+    ? parseFloat(price.replace(/[^0-9.-]+/g, '')) 
+    : price;
+  
+  if (isNaN(numericPrice)) return String(price);
+  
+  const symbol = countryCode ? (currencyMap[countryCode] || currencyMap['NG']) : '₦';
+  
+  const formatted = numericPrice.toLocaleString('en', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+  });
+  
+  return `${symbol}${formatted}`;
+}
+
 
 export const openMaps = (vendor: vendor) => {
   if (vendor?.coordinates) {

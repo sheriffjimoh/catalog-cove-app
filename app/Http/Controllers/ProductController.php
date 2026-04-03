@@ -29,7 +29,10 @@ class ProductController extends Controller
 
     public function create()
     {
-        return Inertia::render('Products/Create');
+        $business = auth()->user()->business;
+        return Inertia::render('Products/Create', [
+            'categories' => $business->categories()->get(['id', 'name']),
+        ]);
     }
 
     public function store(Request $request)
@@ -56,8 +59,9 @@ class ProductController extends Controller
                 'description' => 'nullable|string',
                 'price' => 'nullable|numeric',
                 'stock' => 'nullable|integer',
+                'category_id' => 'nullable|exists:categories,id',
                 'images' => 'nullable|array',
-                'images.*' => 'file|mimes:jpg,jpeg,png|max:5120', // 5MB limit per image
+                'images.*' => 'file|mimes:jpg,jpeg,png|max:5120',
             ]);
     
             // Create product under vendor’s business
@@ -66,6 +70,7 @@ class ProductController extends Controller
                 'description' => $data['description'] ?? null,
                 'price' => $data['price'] ?? null,
                 'stock' => $data['stock'] ?? null,
+                'category_id' => $data['category_id'] ?? null,
             ]);
     
             // Upload images to Cloudinary
@@ -115,6 +120,7 @@ class ProductController extends Controller
 
         return Inertia::render('Products/Edit', [
             'product' => $product->load('images'),
+            'categories' => $request->user()->business->categories()->get(['id', 'name']),
         ]);
     }
 
@@ -130,8 +136,9 @@ class ProductController extends Controller
             'description' => 'nullable|string',
             'price' => 'nullable|numeric',
             'stock' => 'nullable|integer',
+            'category_id' => 'nullable|exists:categories,id',
             'images' => 'nullable|array',
-            'images.*' => 'file|mimes:jpg,jpeg,png|max:5120', // 5MB limit per image
+            'images.*' => 'file|mimes:jpg,jpeg,png|max:5120',
         ]);
 
         $product->update([
@@ -139,6 +146,7 @@ class ProductController extends Controller
             'description' => $data['description'] ?? null,
             'price' => $data['price'] ?? null,
             'stock' => $data['stock'] ?? null,
+            'category_id' => $data['category_id'] ?? null,
         ]);
 
         // Upload new images to Cloudinary

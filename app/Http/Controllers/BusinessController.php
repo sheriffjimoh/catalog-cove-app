@@ -51,8 +51,8 @@ class BusinessController extends Controller
         $business = Business::where('slug', $slug)
         ->with(['products' => function($query) {
             $query->where('is_published', true)
-                  ->with('images');
-        }])
+                  ->with(['images', 'category']);
+        }, 'country', 'categories'])
         ->firstOrFail();
 
     return Inertia::render('Business/View', [
@@ -84,7 +84,9 @@ class BusinessController extends Controller
                 'email' => 'nullable|email|max:255',
                 'address' => 'nullable|string|max:500',
                 'short_note' => 'nullable|string|max:1000',
+                'tagline' => 'nullable|string|max:255',
                 'logo' => 'nullable|image|max:2048',
+                'cover_image' => 'nullable|image|max:4096',
                 'country_id' => 'required|exists:countries,id',
             ]);
 
@@ -94,8 +96,18 @@ class BusinessController extends Controller
                     $uploadedFile,
                     'cataladove/business/logos'
                 );
-            }else {
+            } else {
                 unset($validated['logo']);
+            }
+
+            if ($request->hasFile('cover_image')) {
+                $uploadedFile = $request->file('cover_image')->getRealPath();
+                $validated['cover_image'] = $cloudinary->uploadImage(
+                    $uploadedFile,
+                    'cataladove/business/covers'
+                );
+            } else {
+                unset($validated['cover_image']);
             }
 
             $business->update($validated);

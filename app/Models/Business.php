@@ -11,8 +11,8 @@ class Business extends Model
 {
     protected $fillable = [
         'user_id', 'name', 'whatsapp', 'email',
-        'logo', 'address', 'short_note', 'country_id',
-        'has_selected_plan'
+        'logo', 'cover_image', 'address', 'short_note',
+        'tagline', 'country_id', 'has_selected_plan'
     ];
 
     protected $casts = [
@@ -26,6 +26,10 @@ class Business extends Model
 
     public function products() {
         return $this->hasMany(Product::class);
+    }
+
+    public function categories() {
+        return $this->hasMany(Category::class)->orderBy('sort_order');
     }
 
     protected static function generateUniqueSlug($name)

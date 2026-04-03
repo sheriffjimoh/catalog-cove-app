@@ -18,7 +18,7 @@ import {
 import StorePageHeader from "@/Components/StorePageHeader";
 import StorePageFooter from "@/Components/StorePageFooter";
 import type { vendor, product } from "@/Types";
-import { openWhatsApp, handleShare } from "@/Lib/utils";
+import { openWhatsApp, handleShare, formatPrice } from "@/Lib/utils";
 import { useAnalytics, usePageViewTracking } from '@/Hooks/useAnalytics';
 import { Head } from "@inertiajs/react";
 
@@ -67,7 +67,7 @@ const ProductDetailsPage = ({ business, product: initialProduct }: any) => {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50">
+            <div className="min-h-screen bg-gray-50">
                 <div className="max-w-7xl mx-auto p-4 md:p-8 space-y-8 animate-pulse">
                     <div className="h-20 bg-white rounded-2xl"></div>
                     <div className="grid md:grid-cols-2 gap-8">
@@ -85,8 +85,14 @@ const ProductDetailsPage = ({ business, product: initialProduct }: any) => {
 
     return (
         <>
-        <Head title={`${product?.name} - ${vendor?.name}`} />
-        <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50">
+        <Head title={`${product?.name} - ${vendor?.name}`}>
+            <meta name="description" content={product?.description?.substring(0, 155) || `${product?.name} from ${vendor?.name}`} />
+            <meta property="og:title" content={`${product?.name} - ${vendor?.name}`} />
+            <meta property="og:description" content={product?.description?.substring(0, 155) || `Shop ${product?.name}`} />
+            {product?.images?.[0]?.url && <meta property="og:image" content={product.images[0].url} />}
+            <meta property="og:type" content="product" />
+        </Head>
+        <div className="min-h-screen bg-gray-50">
             <div
                 className={`transition-opacity duration-1000 ${
                     fadeIn ? "opacity-100" : "opacity-0"
@@ -214,11 +220,6 @@ const ProductDetailsPage = ({ business, product: initialProduct }: any) => {
                         <div className="space-y-6">
                             {/* Product Header */}
                             <div>
-                                {/* {product?.category && (
-                                    <Badge variant="outline" className="mb-3 text-purple-700 border-purple-300">
-                                        {product.category}
-                                    </Badge>
-                                )} */}
                                 <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-3">
                                     {product?.name}
                                 </h2>
@@ -245,17 +246,12 @@ const ProductDetailsPage = ({ business, product: initialProduct }: any) => {
                                             {product?.rating}
                                         </span>
                                     </div>
-                                    {/* {product?.reviews_count && (
-                                        <span className="text-slate-500 text-sm">
-                                            ({product.reviews_count} reviews)
-                                        </span>
-                                    )} */}
                                 </div>
 
                                 {/* Price */}
                                 <div className="flex items-baseline gap-3 mb-6">
                                     <span className="text-4xl md:text-5xl font-bold text-purple-700">
-                                        {product?.price}
+                                        {formatPrice(product?.price, (business as any)?.country?.code || 'NG')}
                                     </span>
                                     <Badge
                                         className={`${
@@ -283,19 +279,7 @@ const ProductDetailsPage = ({ business, product: initialProduct }: any) => {
                                 </CardContent>
                             </Card>
 
-                            {/* Product Info */}
-                            {/* {product?.sku && (
-                                <Card className="border border-purple-100 shadow-sm">
-                                    <CardContent className="p-4">
-                                        <div className="flex items-center justify-between text-sm">
-                                            <span className="text-slate-600">SKU:</span>
-                                            <span className="font-semibold text-slate-800">{product.sku}</span>
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                            )} */}
 
-                            {/* Trust Badges */}
                             <div className="grid grid-cols-3 gap-4 py-4">
                                 <div className="text-center">
                                     <div className="w-12 h-12 mx-auto mb-2 bg-purple-100 rounded-full flex items-center justify-center">
