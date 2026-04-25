@@ -209,7 +209,7 @@ class ProductController extends Controller
 
         $vendor = Business::where('slug', $slug)->firstOrFail();
 
-        return Inertia::render('Products/Show', [
+        return Inertia::render('Store/ProductDetail', [
             'product' => $product,
             'business' => $vendor,
         ]);

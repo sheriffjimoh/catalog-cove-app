@@ -61,7 +61,7 @@ const SubscriptionExpired: React.FC<Props> = ({ subscription }) => {
                         </Link>
 
                         <Link
-                            href="/settings/subscription"
+                            href="/subscription"
                             className="inline-block mt-4 text-sm text-gray-500 dark:text-gray-400 hover:text-purple-700 dark:hover:text-purple-400 transition-colors"
                         >
                             View subscription details →

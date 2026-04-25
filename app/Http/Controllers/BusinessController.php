@@ -55,8 +55,9 @@ class BusinessController extends Controller
         }, 'country', 'categories'])
         ->firstOrFail();
 
-    return Inertia::render('Business/View', [
+    return Inertia::render('Store/View', [
         'business' => $business,
+        'is_owner' => auth()->check() && auth()->user()->business && auth()->user()->business->id === $business->id,
     ]);
     }
 
@@ -116,6 +117,36 @@ class BusinessController extends Controller
         } catch (\Exception $e) {
             Log::error('Business update failed: ' . $e->getMessage());
             return redirect()->back()->withInput();
+        }
+    }
+
+    public function updateBanner(Request $request, CloudinaryService $cloudinary)
+    {
+        try {
+            $request->validate([
+                'cover_image' => 'required|image|max:5120',
+            ]);
+
+            $business = $request->user()->business;
+
+            $uploadedFile = $request->file('cover_image')->getRealPath();
+            $url = $cloudinary->uploadImage(
+                $uploadedFile,
+                'cataladove/business/covers'
+            );
+
+            $business->update(['cover_image' => $url]);
+
+            return response()->json([
+                'success' => true,
+                'cover_image' => $url,
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Banner upload failed: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to upload banner.',
+            ], 500);
         }
     }
 }

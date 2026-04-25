@@ -236,7 +236,7 @@ class PaymentController extends Controller
             return response()->json(['error' => 'No active subscription found'], 404);
         }
 
-        $returnUrl = route('settings.subscription');
+        $returnUrl = route('subscription');
 
         if ($subscription->provider === 'stripe') {
             if (!$subscription->provider_customer_id) {

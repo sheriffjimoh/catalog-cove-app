@@ -1,5 +1,4 @@
-
-import { Home, Package, BarChart3, Users, Settings, Image } from 'lucide-react';
+import { Home, Package, Tag, BarChart3, CreditCard, Users, Settings, Image } from 'lucide-react';
 import type { NavigationItem } from '@/Types/nav.type';
 
 export const navigationItems: NavigationItem[] = [
@@ -16,6 +15,12 @@ export const navigationItems: NavigationItem[] = [
       roles: ['business', 'admin']
     },
     {
+      name: 'Categories',
+      icon: Tag,
+      href: '/categories',
+      roles: ['business', 'admin']
+    },
+    {
       name: 'Media Library',
       icon: Image,
       href: '/media-library',
@@ -25,6 +30,12 @@ export const navigationItems: NavigationItem[] = [
       name: 'Analytics',
       icon: BarChart3,
       href: '/analytics',
+      roles: ['business', 'admin']
+    },
+    {
+      name: 'Subscription',
+      icon: CreditCard,
+      href: '/subscription',
       roles: ['business', 'admin']
     },
     {

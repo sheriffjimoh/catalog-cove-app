@@ -22,13 +22,14 @@ import Authenticated from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import { useSonner } from "@/Hooks/useSonner";
 
-export default function ModernCreate() {
+export default function ModernCreate({ categories = [] }: { categories?: { id: number; name: string }[] }) {
     const { data, setData, post, processing, errors } = useForm({
         name: "",
         description: "",
         price: "",
         stock: 0,
-        images: [] as File[], // Explicitly define the type of images as File[]
+        category_id: "" as string | number,
+        images: [] as File[],
     });
 
     const [images, setImages] = useState<ImageUpload[]>([]);
@@ -577,6 +578,27 @@ export default function ModernCreate() {
                                             )}
                                         </div>
                                     </div>
+
+                                    {/* Category */}
+                                    {categories.length > 0 && (
+                                        <div>
+                                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">
+                                                Category
+                                            </label>
+                                            <select
+                                                value={data.category_id}
+                                                onChange={(e) => setData("category_id", e.target.value ? Number(e.target.value) : "")}
+                                                className="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent dark:bg-slate-700 dark:text-white transition-colors"
+                                            >
+                                                <option value="">No category</option>
+                                                {categories.map((cat) => (
+                                                    <option key={cat.id} value={cat.id}>
+                                                        {cat.name}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
 

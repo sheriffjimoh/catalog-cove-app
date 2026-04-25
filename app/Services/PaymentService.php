@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Stripe\Stripe;
 use Stripe\StripeClient;
 use App\Models\Business;
 use App\Models\PlanPricing;
@@ -14,7 +15,9 @@ class PaymentService
 
     public function __construct()
     {
-        $this->stripe = new StripeClient(env('STRIPE_SECRET'));
+        $secret = config('services.stripe.secret');
+        Stripe::setApiKey($secret);
+        $this->stripe = new StripeClient($secret);
     }
 
     public function createStripeCheckoutSession(

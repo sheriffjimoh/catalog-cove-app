@@ -1,5 +1,5 @@
 import TabBtn from "./Tabbtn";
-import { User, CreditCard } from "lucide-react";
+import { User } from "lucide-react";
 
 function SettingsSidebar() {
   const location = window.location.pathname;
@@ -17,16 +17,6 @@ function SettingsSidebar() {
         >
           <User
             className={`w-6 h-6 hover:text-purple-700` + (path === "business-information" || path == "settings" ? " text-purple-700" : "")}
-          />
-        </TabBtn>
-
-        <TabBtn
-          link="/settings/subscription"
-          title="Subscription"
-          text="Manage your plan and billing"
-        >
-          <CreditCard
-            className={`w-6 h-6 hover:text-purple-700` + (path === "subscription" ? " text-purple-700" : "")}
           />
         </TabBtn>
       </div>

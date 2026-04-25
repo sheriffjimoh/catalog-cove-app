@@ -31,7 +31,7 @@ class EnsureBusinessExists
             'profile.update',
             'profile.destroy',
             'settings',
-            'settings.subscription',
+            'subscription',
             'business.update',
         ];
 

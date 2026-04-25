@@ -1,7 +1,7 @@
 import React from "react";
 import SettingsPagesLayout from "./Index";
 import { useForm } from "@inertiajs/react";
-import { Building2, Phone, Mail, MapPin, FileText } from "lucide-react";
+import { Building2, Phone, Mail, MapPin, FileText, Type, ImageIcon } from "lucide-react";
 import { FormInput } from "@/Components/TextInput";
 import { FormTextarea } from "@/Components/TextAreaInput";
 import { FileUpload } from "@/Components/FileUpload";
@@ -29,11 +29,13 @@ const btnID = document.getElementById("business-settings-btn");
 
     const { data, setData, post, processing, errors } = useForm({
         name: business?.name || "",
+        tagline: business?.tagline || "",
         whatsapp: business?.whatsapp || "",
         email: business?.email || "",
         address: business?.address || "",
         short_note: business?.short_note || "",
         logo: null as File | null,
+        cover_image: null as File | null,
         country_id: business?.country_id || "",
     });
 
@@ -64,6 +66,19 @@ const btnID = document.getElementById("business-settings-btn");
                                 placeholder="Enter your business name"
                                 required
                             />
+
+                            <FormInput
+                                label="Tagline"
+                                type="text"
+                                value={data.tagline}
+                                onChange={(e: { target: { value: string } }) =>
+                                    setData("tagline", e.target.value)
+                                }
+                                error={errors.tagline}
+                                icon={Type}
+                                placeholder="A short headline for your store banner"
+                            />
+
                             <SelectInput
                                 label="Country"
                                 value={
@@ -145,6 +160,22 @@ const btnID = document.getElementById("business-settings-btn");
                                     )
                                 }
                                 error={errors.logo}
+                            />
+
+                            <FileUpload
+                                label="Cover Banner"
+                                preview={business?.cover_image || ""}
+                                onChange={(
+                                    e: React.ChangeEvent<HTMLInputElement>
+                                ) =>
+                                    setData(
+                                        "cover_image",
+                                        e.target.files && e.target.files[0]
+                                            ? e.target.files[0]
+                                            : null
+                                    )
+                                }
+                                error={errors.cover_image}
                             />
 
                             <div className="pt-4">

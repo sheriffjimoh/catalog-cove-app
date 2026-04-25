@@ -13,6 +13,7 @@ use App\Http\Controllers\AnalyticsTrackingController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\CategoryController;
 
 
 
@@ -86,9 +87,16 @@ Route::middleware('auth')->group(function () {
                 Route::get('/analytics', [AnalyticsTrackingController::class , 'index'])->name('vendor.analytics');
 
                 Route::get('/settings/business-information', [BusinessController::class , 'edit'])->name('settings');
-                Route::get('/settings/subscription', [SubscriptionController::class , 'manage'])->name('settings.subscription');
+                Route::get('/subscription', [SubscriptionController::class , 'manage'])->name('subscription');
+                // Category routes
+                Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
+                Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
+                Route::put('/categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
+                Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
+                Route::post('/categories/reorder', [CategoryController::class, 'reorder'])->name('categories.reorder');
                 // update business info
                 Route::post('/business/update/{id}', [BusinessController::class , 'update'])->name('business.update');
+                Route::post('/business/update-banner', [BusinessController::class , 'updateBanner'])->name('business.update-banner');
 
                 Route::post('/ai/suggestion', [AISuggestionController::class , 'suggest'])->name('ai.suggestion');
 
