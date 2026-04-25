@@ -9,9 +9,11 @@ use App\Models\Payment;
 use App\Models\UsageRecord;
 use App\Models\Business;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use App\Mail\SubscriptionConfirmation;
 
 class PaymentController extends Controller
 {
@@ -214,6 +216,23 @@ class PaymentController extends Controller
         $business->update(['has_selected_plan' => true]);
 
         Log::info("Subscription created for business {$business->id} on plan {$plan->name} via {$provider}");
+
+        // Send confirmation email to business owner
+        try {
+            Mail::to($business->owner->email)->send(
+                new SubscriptionConfirmation(
+                    $business,
+                    $plan,
+                    $subscription,
+                    $amount,
+                    $currency,
+                    $interval
+                )
+            );
+            Log::info("Subscription confirmation email sent to {$business->owner->email}");
+        } catch (\Exception $e) {
+            Log::error("Failed to send subscription email: " . $e->getMessage());
+        }
     }
 
     /**
