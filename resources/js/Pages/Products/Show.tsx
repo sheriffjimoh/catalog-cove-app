@@ -251,7 +251,7 @@ const ProductDetailsPage = ({ business, product: initialProduct }: any) => {
                                 {/* Price */}
                                 <div className="flex items-baseline gap-3 mb-6">
                                     <span className="text-4xl md:text-5xl font-bold text-purple-700">
-                                        {formatPrice(product?.price, (business as any)?.country?.code || 'NG')}
+                                        {formatPrice(product?.price, (business as any)?.country?.code || 'US')}
                                     </span>
                                     <Badge
                                         className={`${

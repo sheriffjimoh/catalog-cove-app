@@ -7,13 +7,17 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-const currencyMap: Record<string, string> = {
-  NG: '₦',
-  US: '$',
-  GH: 'GH₵',
-  KE: 'KSh',
-  GB: '£',
-  ZA: 'R',
+const countryCurrencyMap: Record<string, { currency: string; locale: string }> = {
+  NG: { currency: 'NGN', locale: 'en-NG' },
+  US: { currency: 'USD', locale: 'en-US' },
+  GH: { currency: 'GHS', locale: 'en-GH' },
+  KE: { currency: 'KES', locale: 'en-KE' },
+  GB: { currency: 'GBP', locale: 'en-GB' },
+  ZA: { currency: 'ZAR', locale: 'en-ZA' },
+  IN: { currency: 'INR', locale: 'en-IN' },
+  CA: { currency: 'CAD', locale: 'en-CA' },
+  AU: { currency: 'AUD', locale: 'en-AU' },
+  EU: { currency: 'EUR', locale: 'de-DE' },
 };
 
 export function formatPrice(price: number | string | null | undefined, countryCode?: string): string {
@@ -25,14 +29,18 @@ export function formatPrice(price: number | string | null | undefined, countryCo
   
   if (isNaN(numericPrice)) return String(price);
   
-  const symbol = countryCode ? (currencyMap[countryCode] || currencyMap['NG']) : '₦';
+  const config = countryCurrencyMap[countryCode || 'US'] || countryCurrencyMap['US'];
   
-  const formatted = numericPrice.toLocaleString('en', {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 2,
-  });
-  
-  return `${symbol}${formatted}`;
+  try {
+    return new Intl.NumberFormat(config.locale, {
+      style: 'currency',
+      currency: config.currency,
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2,
+    }).format(numericPrice);
+  } catch {
+    return `${config.currency} ${numericPrice.toLocaleString()}`;
+  }
 }
 
 
@@ -42,12 +50,13 @@ export const openMaps = (vendor: vendor) => {
   }
 };
 
-export const openWhatsApp = (vendor: vendor, product: product) => {
-
-  
+export const openWhatsApp = (vendor: vendor, product?: product | null) => {
   if (vendor?.whatsapp) {
-      const message = `Hi, I'm interested in ${product?.name} - ${product?.price}`;
-      window.open(`https://wa.me/${vendor.whatsapp}?text=${encodeURIComponent(message)}`, '_blank');
+      const phone = vendor.whatsapp.replace(/[^0-9]/g, '');
+      const message = product
+          ? `Hi, I'm interested in ${product.name} — ${product.price}`
+          : `Hi, I'd like to inquire about your products at ${vendor.name}.`;
+      window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
   }
 };
 

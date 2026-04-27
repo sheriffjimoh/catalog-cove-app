@@ -117,6 +117,7 @@ class DashboardController extends Controller
             'topProducts' => $topProducts,
             'planName' => $plan?->name ?? 'Free',
             'storeUrl' => $storeUrl,
+            'countryCode' => $business->country?->code ?? 'US',
         ]);
     }
 }

@@ -16,6 +16,7 @@ import {
     Clock,
 } from 'lucide-react';
 import { useState } from 'react';
+import { formatPrice } from '@/Lib/utils';
 
 interface Stats {
     totalProducts: number;
@@ -55,10 +56,11 @@ interface Props {
     topProducts: TopProduct[];
     planName: string;
     storeUrl: string;
+    countryCode: string;
 }
 
 export default function Dashboard() {
-    const { stats, viewsPerDay, recentProducts, topProducts, planName, storeUrl } = usePage().props as unknown as Props;
+    const { stats, viewsPerDay, recentProducts, topProducts, planName, storeUrl, countryCode } = usePage().props as unknown as Props;
     const business = usePage().props.business as { name: string; slug: string; logo: string | null } | null;
     const [copied, setCopied] = useState(false);
 
@@ -339,7 +341,7 @@ export default function Dashboard() {
                                                 </td>
                                                 <td className="py-3 pr-4">
                                                     <span className="text-sm text-black dark:text-white">
-                                                        {product.price ? `₦${Number(product.price).toLocaleString()}` : '—'}
+                                                        {product.price ? formatPrice(product.price, countryCode) : '—'}
                                                     </span>
                                                 </td>
                                                 <td className="py-3 pr-4">

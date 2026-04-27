@@ -60,7 +60,7 @@ const StoreListingPage = ({ business, is_owner = false }: any) => {
     };
 
     const categories: { id: number; name: string }[] = business.categories || [];
-    const countryCode = business.country?.code || 'NG';
+    const countryCode = business.country?.code || 'US';
 
     if (loading) {
         return (
