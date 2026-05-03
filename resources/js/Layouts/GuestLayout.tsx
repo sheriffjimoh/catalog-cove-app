@@ -1,7 +1,7 @@
 import { PropsWithChildren } from "react";
 
 interface GuestProps extends PropsWithChildren {
-  name: 'login' | 'register' | 'create-business' | '';
+  name?: 'login' | 'register' | 'create-business' | '';
 }
 
 const getHeaderContent = (name: string) => {
@@ -29,7 +29,7 @@ const getHeaderContent = (name: string) => {
   }
 };
 
-export default function Guest({ children, name }: GuestProps) {
+export default function Guest({ children, name = '' }: GuestProps) {
   const { title, subtitle } = getHeaderContent(name);
 
   return (

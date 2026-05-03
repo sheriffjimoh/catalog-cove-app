@@ -6,7 +6,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/Components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/Components/ui/button";
 import { Badge } from "@/Components/ui/badge";
 import {
     TrendingUp,

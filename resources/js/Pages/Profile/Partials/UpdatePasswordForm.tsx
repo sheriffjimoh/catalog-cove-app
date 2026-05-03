@@ -111,7 +111,7 @@ export default function UpdatePasswordForm({
                     <TextInput
                         id="password_confirmation"
                         value={data.password_confirmation}
-                        onChange={(e) =>
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                             setData('password_confirmation', e.target.value)
                         }
                         type="password"

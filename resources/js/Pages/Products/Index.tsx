@@ -25,6 +25,7 @@ interface Props {
 
 export default function Index({ products, filters }: Props) {
   const { subscription } = usePage<{
+    auth: { user: any };
     subscription?: {
       plan_name: string;
       plan_slug: string;

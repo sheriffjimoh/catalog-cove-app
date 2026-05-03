@@ -8,7 +8,7 @@ import {
     CardTitle,
 } from '@/Components/ui/card';
 import { Badge } from '@/Components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/Components/ui/button';
 import {
     Crown,
     Calendar,
