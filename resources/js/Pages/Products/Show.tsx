@@ -193,7 +193,7 @@ const ProductDetailsPage = ({ business, product: initialProduct }: any) => {
                             {/* Thumbnail Gallery */}
                             {product && product.images.length > 1 && (
                                 <div className="grid grid-cols-4 md:grid-cols-5 gap-3">
-                                    {product.images.map((img, idx) => (
+                                    {product.images.map((img: {id: number; url: string; is_processed: boolean}, idx: number) => (
                                         <button
                                             key={idx}
                                             onClick={() =>

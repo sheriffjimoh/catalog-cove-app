@@ -94,7 +94,7 @@ export default function DeleteUserForm({
                             name="password"
                             ref={passwordInput}
                             value={data.password}
-                            onChange={(e) =>
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                                 setData('password', e.target.value)
                             }
                             className="mt-1 block w-3/4"
